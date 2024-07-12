@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "294426985595",
+    "project_id": "raj-eat",
+    "storage_bucket": "raj-eat.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:294426985595:android:b84e732766adf18f57cede",
+        "android_client_info": {
+          "package_name": "com.example.raj_eat"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDako664S6hrpylU8nlmE3OBN2HykOXQ4Y"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
