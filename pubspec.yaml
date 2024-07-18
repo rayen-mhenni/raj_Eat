@@ -18,7 +18,7 @@ dependencies:
   provider: ^6.1.2
   get: ^4.6.6
   fluttertoast: ^8.0.7
-  location:
+  location: 7.0.0
   google_maps_flutter:
   pay: ^2.0.0
   font_awesome_flutter: ^10.7.0

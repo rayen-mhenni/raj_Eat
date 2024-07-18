@@ -9,7 +9,7 @@ import 'package:raj_eat/singup/sing_up_page.dart';
 
 class FirebaseAuthService {
 
-  FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
 
   Future<User?> signUpWithEmailAndPassword(String email, String password) async {
 

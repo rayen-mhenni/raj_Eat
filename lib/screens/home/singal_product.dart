@@ -12,7 +12,7 @@ class SingalProduct extends StatefulWidget {
   final String productId;
   final ProductModel productUnit;
 
-  SingalProduct({
+  const SingalProduct({super.key, 
     required  this.productId ,
     required this.productImage ,
     required this.productName ,
@@ -45,11 +45,11 @@ class _SingalProductState extends State<SingalProduct> {
       child: Row(
           children: [
       Container(
-      margin: EdgeInsets.only(right: 10),
+      margin: const EdgeInsets.only(right: 10),
       height: 230,
       width: 165,
       decoration: BoxDecoration(
-        color: Color(0xffd9dad9),
+        color: const Color(0xffd9dad9),
         borderRadius: BorderRadius.circular(10),
       ),
       child: Column(
@@ -59,7 +59,7 @@ class _SingalProductState extends State<SingalProduct> {
             onTap: widget.onTap,
             child: Container(
               height: 120,
-              padding: EdgeInsets.all(5),
+              padding: const EdgeInsets.all(5),
               width: double.infinity,
               child: Image.network(
                 widget.productImage,
@@ -81,12 +81,12 @@ class _SingalProductState extends State<SingalProduct> {
                     ),
                   ),
                   Text(
-                    '${widget.productPrice}\D/${unitData == null?firstValue:unitData}',
-                    style: TextStyle(
+                    '${widget.productPrice}D/${unitData ?? firstValue}',
+                    style: const TextStyle(
                       color: Colors.grey,
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 5,
                   ),
                   Row(
@@ -126,10 +126,10 @@ class _SingalProductState extends State<SingalProduct> {
                               },
                             );
                           },
-                          title: unitData == null ? firstValue : unitData,
+                          title: unitData ?? firstValue,
                         ),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         width: 5,
                       ),
                       Count(
@@ -137,7 +137,7 @@ class _SingalProductState extends State<SingalProduct> {
                         productImage: widget.productImage,
                         productName: widget.productName,
                         productPrice: widget.productPrice,
-                        productUnit: unitData == null?firstValue:unitData,
+                        productUnit: unitData ?? firstValue,
 
                       ),
                     ],

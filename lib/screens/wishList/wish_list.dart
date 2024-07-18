@@ -8,7 +8,7 @@ import 'package:raj_eat/widgets/single_item.dart';
 
 class WishLsit extends StatefulWidget {
   final WishListProvider wishListProvider;
-  WishLsit({required this.wishListProvider});
+  const WishLsit({super.key, required this.wishListProvider});
 
   @override
   _WishLsitState createState() => _WishLsitState();
@@ -27,13 +27,13 @@ class _WishLsitState extends State<WishLsit> {
   void showAlertDialog(BuildContext context, ProductModel delete) {
     // set up the buttons
     Widget cancelButton = TextButton(
-      child: Text("No"),
+      child: const Text("No"),
       onPressed: () {
         Navigator.of(context).pop();
       },
     );
     Widget continueButton = TextButton(
-      child: Text("Yes"),
+      child: const Text("Yes"),
       onPressed: () {
         wishListProvider.deleteWishtList(delete.productId);
         Navigator.of(context).pop();
@@ -42,8 +42,8 @@ class _WishLsitState extends State<WishLsit> {
 
     // set up the AlertDialog
     AlertDialog alert = AlertDialog(
-      title: Text("WishList Product"),
-      content: Text("Are you delete on wishList Product?"),
+      title: const Text("WishList Product"),
+      content: const Text("Are you delete on wishList Product?"),
       actions: [
         cancelButton,
         continueButton,
@@ -78,7 +78,7 @@ class _WishLsitState extends State<WishLsit> {
               ProductModel data = wishListProvider.getWishList[index];
               return Column(
                 children: [
-                  SizedBox(
+                  const SizedBox(
                     height: 10,
                   ),
                   SingleItem(
@@ -88,7 +88,7 @@ class _WishLsitState extends State<WishLsit> {
                     productPrice: data.productPrice,
                     productId: data.productId,
                     productQuantity: data.productQuantity,
-                    productUnit: ProductUnit(),
+                    productUnit: const ProductUnit(),
                     onDelete: () {
                       showAlertDialog(context, data);
                     },

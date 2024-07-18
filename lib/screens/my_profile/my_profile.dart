@@ -6,7 +6,7 @@ import 'package:raj_eat/providers/user_provider.dart';
 import 'package:raj_eat/screens/home/drawer_side.dart';
 class MyProfile extends StatefulWidget {
   final UserProvider userProvider;
-  MyProfile({required this.userProvider});
+  const MyProfile({super.key, required this.userProvider});
   @override
   _MyProfileState createState() => _MyProfileState();
 }
@@ -16,18 +16,19 @@ class _MyProfileState extends State<MyProfile> {
   Widget listTile({IconData icon = Icons.error, String title=''}) {
     return Column(
       children: [
-        Divider(
+        const Divider(
           height: 1,
         ),
         ListTile(
           leading: Icon(icon),
           title: Text(title),
-          trailing: Icon(Icons.arrow_forward_ios),
+          trailing: const Icon(Icons.arrow_forward_ios),
         )
       ],
     );
   }
 
+  @override
   Widget build(BuildContext context) {
     var userData = widget.userProvider.currentData;
     return Scaffold(
@@ -54,10 +55,10 @@ class _MyProfileState extends State<MyProfile> {
         Container(
           height: 548,
           width: double.infinity,
-          padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+          padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
           decoration: BoxDecoration(
             color: scaffoldBackgroundColor,
-            borderRadius: BorderRadius.only(
+            borderRadius: const BorderRadius.only(
               topLeft: Radius.circular(30),
               topRight: Radius.circular(30),
             ),
@@ -70,7 +71,7 @@ class _MyProfileState extends State<MyProfile> {
                     Container(
                       width: 250,
                       height: 80,
-                      padding: EdgeInsets.only(left: 20),
+                      padding: const EdgeInsets.only(left: 20),
                       child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
@@ -85,7 +86,7 @@ class _MyProfileState extends State<MyProfile> {
                                     fontWeight: FontWeight.bold,
                                     color: textColor),
                               ),
-                              SizedBox(
+                              const SizedBox(
                                 height: 10,
                               ),
                               Text(
@@ -99,11 +100,11 @@ class _MyProfileState extends State<MyProfile> {
                          backgroundColor: primaryColor,
                          child: CircleAvatar(
                            radius: 12,
+                           backgroundColor: scaffoldBackgroundColor,
                            child: Icon(
                              Icons.edit,
                              color: primaryColor,
                            ),
-                           backgroundColor: scaffoldBackgroundColor,
                          ),
                       ),
                           ],

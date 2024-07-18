@@ -4,7 +4,6 @@ import 'package:provider/provider.dart';
 import 'package:raj_eat/models/review_cart_model.dart';
 import 'package:raj_eat/providers/review_cart_provider.dart';
 import 'package:raj_eat/screens/check_out/delivery_details/delivery_details.dart';
-import 'package:raj_eat/widgets/product_unit.dart';
 import '../../config/colors.dart';
 import '../../widgets/single_item.dart';
 
@@ -13,18 +12,18 @@ import '../../widgets/single_item.dart';
 class ReviewCart extends StatelessWidget {
   final ReviewCartProvider reviewCartProvider;
 
-  ReviewCart({required this.reviewCartProvider});
+  const ReviewCart({super.key, required this.reviewCartProvider});
 
   showAlertDialog(BuildContext context, ReviewCartModel delete) {
     // set up the buttons
     Widget cancelButton = TextButton(
-      child: Text("No"),
+      child: const Text("No"),
       onPressed: () {
         Navigator.of(context).pop();
       },
     );
     Widget continueButton = TextButton(
-      child: Text("Yes"),
+      child: const Text("Yes"),
       onPressed: () {
         reviewCartProvider.reviewCartDataDelete(delete.cartId);
         Navigator.of(context).pop();
@@ -33,8 +32,8 @@ class ReviewCart extends StatelessWidget {
 
     // set up the AlertDialog
     AlertDialog alert = AlertDialog(
-      title: Text("Cart Product"),
-      content: Text("Are you sure you want to delete this cart product?"),
+      title: const Text("Cart Product"),
+      content: const Text("Are you sure you want to delete this cart product?"),
       actions: [
         cancelButton,
         continueButton,
@@ -62,17 +61,16 @@ class ReviewCart extends StatelessWidget {
     // reviewCartProvider.getReviewCartData(); // Remove this line
     return Scaffold(
       bottomNavigationBar: ListTile(
-        title: Text("Total Amount"),
+        title: const Text("Total Amount"),
         subtitle: Text(
-          "\d ${reviewCartProvider.getTotalPrice()}",
+          "d ${reviewCartProvider.getTotalPrice()}",
           style: TextStyle(
             color: Colors.green[900],
           ),
         ),
-        trailing: Container(
+        trailing: SizedBox(
           width: 160,
           child: MaterialButton(
-            child: Text('submit'),
             color: primaryColor,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(30),
@@ -83,11 +81,12 @@ class ReviewCart extends StatelessWidget {
               } else {
                 Navigator.of(context).push(
                   MaterialPageRoute(
-                    builder: (context) => DeliveryDetails(),
+                    builder: (context) => const DeliveryDetails(),
                   ),
                 );
               }
             },
+            child: const Text('submit'),
 
           ),
         ),
@@ -102,7 +101,7 @@ class ReviewCart extends StatelessWidget {
         builder: (context, reviewCartProvider, _) {
           reviewCartProvider.getReviewCartData();
           return reviewCartProvider.getReviewCartDataList.isEmpty
-              ? Center(
+              ? const Center(
                child: Text("NO DATA"),
           )
               : ListView.builder(
@@ -112,7 +111,7 @@ class ReviewCart extends StatelessWidget {
               reviewCartProvider.getReviewCartDataList[index];
               return Column(
                 children: [
-                  SizedBox(
+                  const SizedBox(
                     height: 10,
                   ),
                   SingleItem(

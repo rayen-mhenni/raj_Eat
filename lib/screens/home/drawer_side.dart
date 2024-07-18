@@ -14,7 +14,7 @@ import 'home_screen.dart';
 
 class DrawerSide extends StatefulWidget {
   final UserProvider userProvider;
-  const DrawerSide({required this.userProvider});
+  const DrawerSide({super.key, required this.userProvider});
 
   @override
   _DrawerSideState createState() => _DrawerSideState();
@@ -65,7 +65,7 @@ class _DrawerSideState extends State<DrawerSide> {
                        radius: 40,
                      ),
                    ),
-              SizedBox(
+              const SizedBox(
               width: 20,
           ),
                    Column(
@@ -89,7 +89,7 @@ class _DrawerSideState extends State<DrawerSide> {
             ),
               listTile(iconData: Icons.home_max_outlined,title: "Home",
                   onTap:(){
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => HomeScreen()),);
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => const HomeScreen()),);
                   }),
               listTile(
                 iconData: Icons.shop_outlined,
@@ -132,8 +132,8 @@ class _DrawerSideState extends State<DrawerSide> {
               listTile(iconData: Icons.copy_outlined,title: "raise a complaint"),
               Container(
                 height: 350,
-                padding: EdgeInsets.symmetric(horizontal: 20),
-                child: Column(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: const Column(
                   crossAxisAlignment: CrossAxisAlignment.start ,
                   children: [
                     Text("contact support"),

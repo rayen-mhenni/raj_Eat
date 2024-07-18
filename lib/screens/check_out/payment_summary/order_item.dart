@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:raj_eat/models/review_cart_model.dart';
-import 'package:raj_eat/providers/review_cart_provider.dart';
 
 class OrderItem extends StatelessWidget {
   final ReviewCartModel e;
-  OrderItem({required this.e});
+  const OrderItem({super.key, required this.e});
   @override
   Widget build(BuildContext context) {
     return ListTile(
@@ -28,7 +27,7 @@ class OrderItem extends StatelessWidget {
             ),
           ),
           Text(
-            "\D${e.cartPrice}",
+            "D${e.cartPrice}",
           ),
         ],
       ),

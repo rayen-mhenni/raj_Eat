@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:raj_eat/config/colors.dart';
 import 'package:raj_eat/providers/check_out_provider.dart';
 import 'package:location/location.dart';
@@ -7,38 +6,48 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 
 class CostomGoogleMap extends StatefulWidget {
+  const CostomGoogleMap({super.key});
+
   @override
   _GoogleMapState createState() => _GoogleMapState();
 }
 
 class _GoogleMapState extends State<CostomGoogleMap> {
-  LatLng _initialcameraposition = LatLng(20.5937, 78.9629);
+  final LatLng _initialcameraposition = const LatLng(36.7948, 10.0608);
   late GoogleMapController controller;
-  Location _location = Location();
-  void _onMapCreated(GoogleMapController _value) {
-    controller = _value;
+  final Location _location = Location();
+  void _onMapCreated(GoogleMapController value) {
+    controller = value;
     _location.onLocationChanged.listen((event) {
       controller.animateCamera(
         CameraUpdate.newCameraPosition(
           CameraPosition(
-              target: LatLng(event.latitude!, event.longitude!), zoom: 15),
+              target: _initialcameraposition, zoom: 13),
         ),
       );
     });
+    Set<Marker> markers = {};
   }
   @override
   Widget build(BuildContext context) {
     CheckoutProvider checkoutProvider = Provider.of(context);
     return Scaffold(
         body: SafeArea(
-        child: Container(
+        child: SizedBox(
         height: MediaQuery.of(context).size.height,
         width: MediaQuery.of(context).size.width,
           child: Stack(
            children: [
             GoogleMap(initialCameraPosition: CameraPosition(
-              target: _initialcameraposition,
+              target: _initialcameraposition,zoom: 13,
             ),
+              markers: {
+              Marker(
+                markerId: MarkerId("marker_1"),
+                icon: BitmapDescriptor.defaultMarker,
+                position: _initialcameraposition
+              )
+              },
               mapType: MapType.normal,
               onMapCreated: _onMapCreated,
             ),
@@ -50,7 +59,7 @@ class _GoogleMapState extends State<CostomGoogleMap> {
               height: 50,
               width: double.infinity,
               margin:
-              EdgeInsets.only(right: 60, left: 10, bottom: 40, top: 40),
+              const EdgeInsets.only(right: 60, left: 10, bottom: 40, top: 40),
               child: MaterialButton(
                 onPressed: () async {
                   await _location.getLocation().then((value) {
@@ -61,8 +70,8 @@ class _GoogleMapState extends State<CostomGoogleMap> {
                   Navigator.of(context).pop();
                 },
                 color: primaryColor,
-                child: Text("Set Location"),
-                shape: StadiumBorder(),
+                shape: const StadiumBorder(),
+                child: const Text("Set Location"),
               ),
             ),
           ),
@@ -72,5 +81,25 @@ class _GoogleMapState extends State<CostomGoogleMap> {
         ),
     );
   }
+  Future<void> getLocationUpdates() async{
+    bool _serviceEnabled;
+    PermissionStatus _permissionGranted;
+
+    _serviceEnabled = await _location.serviceEnabled();
+    if (!_serviceEnabled) {
+      _serviceEnabled = await _location.requestService();
+      if (!_serviceEnabled) {
+        return;
+      }
+    }
+    _permissionGranted = await _location.hasPermission();
+    if (_permissionGranted == PermissionStatus.denied) {
+      _permissionGranted = await _location.requestPermission();
+      if (_permissionGranted != PermissionStatus.granted) {
+        return;
+      }
+    }
+    
+
   }
 

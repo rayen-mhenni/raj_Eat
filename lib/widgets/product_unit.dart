@@ -4,7 +4,7 @@ class ProductUnit extends StatelessWidget {
 final VoidCallback onTap;
 final String title;
 
-const ProductUnit({this.onTap = _defaultOnTap, this.title = ''});
+const ProductUnit({super.key, this.onTap = _defaultOnTap, this.title = ''});
 static void _defaultOnTap() {
   // Default empty function
 }
@@ -13,7 +13,7 @@ Widget build(BuildContext context) {
 return InkWell(
 onTap: onTap,
 child: Container(
-        padding: EdgeInsets.only(left: 5),
+        padding: const EdgeInsets.only(left: 5),
         height: 25,
         decoration: BoxDecoration(
           border: Border.all(color: Colors.grey),
@@ -23,10 +23,10 @@ child: Container(
           children: [
             Expanded(
                 child: Text(
-                  '$title',
-                  style: TextStyle(fontSize: 11),
+                  title,
+                  style: const TextStyle(fontSize: 11),
                 )),
-            Center(
+            const Center(
               child: Icon(
                 Icons.arrow_drop_down,
                 size: 20,

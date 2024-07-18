@@ -17,8 +17,8 @@ class ProductOverview extends StatefulWidget {
   final int productPrice;
   final String productId;
 
-  ProductOverview(
-      { this.productImage = '', this.productName = '',this.productPrice = 0, this.productId=''});
+  const ProductOverview(
+      {super.key,  this.productImage = '', this.productName = '',this.productPrice = 0, this.productId=''});
 
   @override
   _ProductOverviewState createState() => _ProductOverviewState();
@@ -40,7 +40,7 @@ class _ProductOverviewState extends State<ProductOverview> {
         child: GestureDetector(
           onTap: onTap,
           child: Container(
-          padding: EdgeInsets.all(20),
+          padding: const EdgeInsets.all(20),
               color: backgroundColor,
            child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -50,7 +50,7 @@ class _ProductOverviewState extends State<ProductOverview> {
             size: 20,
             color: iconColor,
               ),
-              SizedBox(
+              const SizedBox(
                 width: 5,
               ),
               Text(
@@ -74,7 +74,7 @@ class _ProductOverviewState extends State<ProductOverview> {
         .doc(widget.productId)
         .get()
         .then((value) => {
-      if (this.mounted)
+      if (mounted)
         {
           if (value.exists)
             {
@@ -148,23 +148,23 @@ class _ProductOverviewState extends State<ProductOverview> {
       children: [
       Expanded(
        flex: 2,
-       child: Container(
+       child: SizedBox(
          width: double.infinity,
          child: Column(
              children: [
                ListTile(
                  title: Text(widget.productName),
-                 subtitle: Text("\D${widget.productPrice}"),
+                 subtitle: Text("D${widget.productPrice}"),
                ),
           Container(
             height: 250,
-            padding: EdgeInsets.all(40),
+            padding: const EdgeInsets.all(40),
             child: Image.network(
               widget.productImage??"",
             )
        ),
                Container(
-                 padding: EdgeInsets.symmetric(horizontal: 20),
+                 padding: const EdgeInsets.symmetric(horizontal: 20),
                  width: double.infinity,
                  child: Text(
                    "Available Options",
@@ -176,7 +176,7 @@ class _ProductOverviewState extends State<ProductOverview> {
                  ),
                ),
                Padding(
-            padding: EdgeInsets.symmetric(
+            padding: const EdgeInsets.symmetric(
               horizontal: 10,
             ),
             child: Row(
@@ -202,7 +202,7 @@ class _ProductOverviewState extends State<ProductOverview> {
             ),
             ],
               ),
-                  Text("Salad Mechwiya"),
+                  const Text("Salad Mechwiya"),
                   Count(
                     productId: widget.productId,
                     productImage: widget.productImage,
@@ -216,7 +216,7 @@ class _ProductOverviewState extends State<ProductOverview> {
             ),
           ),
                Padding(
-                 padding: EdgeInsets.symmetric(
+                 padding: const EdgeInsets.symmetric(
                    horizontal: 10,
                  ),
                  child: Row(
@@ -242,7 +242,7 @@ class _ProductOverviewState extends State<ProductOverview> {
                          ),
                        ],
                      ),
-                     Text("Oignons"),
+                     const Text("Oignons"),
                      Count(
                        productId: widget.productId,
                        productImage: widget.productImage,
@@ -254,7 +254,7 @@ class _ProductOverviewState extends State<ProductOverview> {
                  ),
                ),
                Padding(
-                 padding: EdgeInsets.symmetric(
+                 padding: const EdgeInsets.symmetric(
                    horizontal: 10,
                  ),
                  child: Row(
@@ -280,7 +280,7 @@ class _ProductOverviewState extends State<ProductOverview> {
                          ),
                        ],
                      ),
-                     Text("Salad"),
+                     const Text("Salad"),
 
                      Count(
                        productId: widget.productId,
@@ -293,7 +293,7 @@ class _ProductOverviewState extends State<ProductOverview> {
                  ),
                ),
                Padding(
-                 padding: EdgeInsets.symmetric(
+                 padding: const EdgeInsets.symmetric(
                    horizontal: 10,
                  ),
                  child: Row(
@@ -319,7 +319,7 @@ class _ProductOverviewState extends State<ProductOverview> {
                          ),
                        ],
                      ),
-                     Text("Tomatoes"),
+                     const Text("Tomatoes"),
                      Count(
                        productId: widget.productId,
                        productImage: widget.productImage,

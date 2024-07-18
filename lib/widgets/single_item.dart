@@ -20,7 +20,7 @@ class SingleItem extends StatefulWidget {
   var productUnit;
 
   SingleItem(
-      {this.isBool = false,required this.productUnit, required this.productPrice, required this.productImage, required this.productName, required this.productId, required this.productQuantity, required this.onDelete,this.wishList = false,}); // Define isBool parameter in the constructor
+      {super.key, this.isBool = false,required this.productUnit, required this.productPrice, required this.productImage, required this.productName, required this.productId, required this.productQuantity, required this.onDelete,this.wishList = false,}); // Define isBool parameter in the constructor
 
 @override
 _SingleItemState createState() => _SingleItemState();
@@ -45,7 +45,7 @@ class _SingleItemState extends State<SingleItem> {
       padding: const EdgeInsets.symmetric(horizontal:10),
          child: Row(
       children: [
-          Expanded(child: Container(
+          Expanded(child: SizedBox(
           height: 100,
            child: Center(
             child: Image.network(widget.productImage,),
@@ -53,7 +53,7 @@ class _SingleItemState extends State<SingleItem> {
         ),
         ),
           Expanded(
-           child: Container(
+           child: SizedBox(
           height: 100,
             child: Column(
             mainAxisAlignment: widget.isBool == false ?
@@ -71,7 +71,7 @@ class _SingleItemState extends State<SingleItem> {
                      fontSize: 16
                  ),
                ),
-                  Text("${widget.productPrice}\d" ,
+                  Text("${widget.productPrice}d" ,
                     style: TextStyle(
                         color: textColor,
                         fontWeight:  FontWeight.bold,
@@ -93,19 +93,19 @@ class _SingleItemState extends State<SingleItem> {
                           children: <Widget>[
 
                             ListTile(
-                              title: new Text('50 Gram '),
+                              title: const Text('50 Gram '),
                               onTap: (){
                                 Navigator.pop(context);
                               },
                             ),
                             ListTile(
-                              title: new Text('500 Gram '),
+                              title: const Text('500 Gram '),
                               onTap: (){
                                 Navigator.pop(context);
                               },
                             ),
                             ListTile(
-                              title: new Text('1kg '),
+                              title: const Text('1kg '),
                               onTap: (){
                                 Navigator.pop(context);
                               },
@@ -117,8 +117,8 @@ class _SingleItemState extends State<SingleItem> {
                   );
                 },
                 child: Container(
-                 margin: EdgeInsets.only(right: 15),
-                 padding: EdgeInsets.symmetric(horizontal: 10),
+                 margin: const EdgeInsets.only(right: 15),
+                 padding: const EdgeInsets.symmetric(horizontal: 10),
                  height: 35,
                  decoration: BoxDecoration(
                    border: Border.all(color: Colors.grey),
@@ -126,7 +126,7 @@ class _SingleItemState extends State<SingleItem> {
                  ),
                  child: Row(
                    children: [
-                     Expanded(child:Text(" Gram ",
+                     const Expanded(child:Text(" Gram ",
                      style: TextStyle(
                      color: Colors.grey,
                      fontSize: 14,
@@ -150,8 +150,8 @@ class _SingleItemState extends State<SingleItem> {
           child:
            Container(
             height: 100,
-            padding:widget.isBool == false?EdgeInsets.symmetric(horizontal: 15,vertical: 32)
-              :EdgeInsets.only(left: 15,right:15 ),
+            padding:widget.isBool == false?const EdgeInsets.symmetric(horizontal: 15,vertical: 32)
+              :const EdgeInsets.only(left: 15,right:15 ),
             child: widget.isBool==false?
              Count(
              productId: widget.productId,
@@ -166,11 +166,11 @@ class _SingleItemState extends State<SingleItem> {
                 child: Column(
                             children: [
                  InkWell(
-                   onTap: widget.onDelete != null ? () => widget.onDelete!() : null,
-                   child: Icon(Icons.delete,size: 30,color: Colors.black45,
+                   onTap: widget.onDelete != null ? () => widget.onDelete() : null,
+                   child: const Icon(Icons.delete,size: 30,color: Colors.black45,
                                  ),
                  ),
-                 SizedBox(
+                 const SizedBox(
 
                   height: 5,
                 ),
@@ -265,7 +265,7 @@ class _SingleItemState extends State<SingleItem> {
       ],
       ),
     ),
-        widget.isBool == false?Container():Divider(
+        widget.isBool == false?Container():const Divider(
       height: 1,
       color: Colors.black45,
     ),

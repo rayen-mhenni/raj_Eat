@@ -36,8 +36,7 @@ class WishListProvider with ChangeNotifier {
         .doc(FirebaseAuth.instance.currentUser!.uid)
         .collection("YourWishList")
         .get();
-    value.docs.forEach(
-          (element) {
+    for (var element in value.docs) {
         ProductModel productModel = ProductModel(
           productId: element.get("wishListId"),
           productImage: element.get("wishListImage"),
@@ -47,8 +46,7 @@ class WishListProvider with ChangeNotifier {
 
         );
         newList.add(productModel);
-      },
-    );
+      }
     wishList = newList;
     notifyListeners();
   }

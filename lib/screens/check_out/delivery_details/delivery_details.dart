@@ -13,6 +13,8 @@ import 'package:raj_eat/screens/check_out/delivery_details/single_delivery_item.
 import 'package:raj_eat/screens/check_out/payment_summary/payment_summary.dart';
 
 class DeliveryDetails extends StatefulWidget {
+  const DeliveryDetails({super.key});
+
   @override
   _DeliveryDetailsState createState() => _DeliveryDetailsState();
 }
@@ -25,16 +27,16 @@ class _DeliveryDetailsState extends State<DeliveryDetails> {
     deliveryAddressProvider.getDeliveryAddressData();
     return Scaffold(
         appBar: AppBar(
-          title: Text("Delivery Details"),
+          title: const Text("Delivery Details"),
         ),
 
         floatingActionButton: FloatingActionButton(
           backgroundColor: primaryColor,
-          child: Icon(Icons.add),
+          child: const Icon(Icons.add),
           onPressed: () {
          Navigator.of(context).push(
          MaterialPageRoute(
-         builder: (context) => AddDeliverAddress(
+         builder: (context) => const AddDeliverAddress(
 
     ),
     ),
@@ -43,17 +45,13 @@ class _DeliveryDetailsState extends State<DeliveryDetails> {
         ),
     bottomNavigationBar: Container(
     height: 48,
-    margin: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+    margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
     child: MaterialButton(
-      child: deliveryAddressProvider.getDeliveryAddressList.isEmpty
-          ? Text("Add new Address")
-          : Text("Payment Summary"),
-
       onPressed: () {
         deliveryAddressProvider.getDeliveryAddressList.isEmpty
             ? Navigator.of(context).push(
           MaterialPageRoute(
-            builder: (context) => AddDeliverAddress(),
+            builder: (context) => const AddDeliverAddress(),
           ),
         )
             : Navigator.of(context).push(
@@ -70,20 +68,23 @@ class _DeliveryDetailsState extends State<DeliveryDetails> {
           30,
         ),
       ),
+      child: deliveryAddressProvider.getDeliveryAddressList.isEmpty
+          ? const Text("Add new Address")
+          : const Text("Payment Summary"),
     ),
     ),
     body: ListView(
         children: [
-          ListTile(
+          const ListTile(
             title: Text("Deliver To"),
           ),
-          Divider(
+          const Divider(
             height: 1,
           ),
           deliveryAddressProvider.getDeliveryAddressList.isEmpty
               ? Center(
             child: Container(
-              child: Center(
+              child: const Center(
                 child: Text("No Data"),
               ),
             ),

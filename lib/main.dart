@@ -13,7 +13,6 @@ import 'package:raj_eat/repository/firebase_auth_service.dart';
 import 'package:raj_eat/singin/login_page.dart';
 import 'package:raj_eat/singup/sing_up_page.dart';
 import 'package:raj_eat/config/colors.dart';
-import 'package:raj_eat/providers/review_cart_provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -23,10 +22,12 @@ void main() async {
     print("Error initializing Firebase: $error");
     // Handle the error here, such as showing an error dialog or logging the error
   });
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
@@ -55,12 +56,12 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         title: 'Flutter Firebase',
         routes: {
-          '/': (context) => SplashScreen(
+          '/': (context) => const SplashScreen(
             // Here, you can decide whether to show the LoginPage or HomePage based on user authentication
             child: LoginPage(),
           ),
-          '/login': (context) => LoginPage(),
-          '/signUp': (context) => SignUpPage(),
+          '/login': (context) => const LoginPage(),
+          '/signUp': (context) => const SignUpPage(),
         },
       ),
     );

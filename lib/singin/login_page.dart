@@ -12,6 +12,8 @@ import 'package:google_sign_in/google_sign_in.dart';
 
 
 class LoginPage extends StatefulWidget {
+  const LoginPage({super.key});
+
 
   @override
   _SignInScreenState createState() => _SignInScreenState();
@@ -21,8 +23,8 @@ class _SignInScreenState extends State<LoginPage> {
   late UserProvider userProvider;
 
   bool _isSigning = false;
-  TextEditingController _emailController = TextEditingController();
-  TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
   final FirebaseAuthService _authService = FirebaseAuthService();
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
 
@@ -38,7 +40,7 @@ class _SignInScreenState extends State<LoginPage> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
 
-      body: Container(
+      body: SizedBox(
 
         height: double.infinity,
         width: double.infinity,
@@ -47,7 +49,7 @@ class _SignInScreenState extends State<LoginPage> {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-        Container(
+        SizedBox(
           height: 200,
           width: double.infinity,
           child: Column(
@@ -60,7 +62,7 @@ class _SignInScreenState extends State<LoginPage> {
               BoxShadow(
                 blurRadius: 5,
                 color: Colors.green.shade900,
-                offset: Offset(3, 3),
+                offset: const Offset(3, 3),
               )
             ]),
           ),
@@ -69,19 +71,19 @@ class _SignInScreenState extends State<LoginPage> {
         ),
             TextFormField(
               controller: _emailController,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 labelText: 'Email',
               ),
             ),
-            SizedBox(height: 16.0),
+            const SizedBox(height: 16.0),
             TextFormField(
               controller: _passwordController,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 labelText: 'Password',
               ),
               obscureText: true,
             ),
-            SizedBox(height: 32.0),
+            const SizedBox(height: 32.0),
             ElevatedButton(
               onPressed: () async {
                 _signIn();
@@ -94,8 +96,8 @@ class _SignInScreenState extends State<LoginPage> {
                   borderRadius: BorderRadius.circular(50),
                 ),
                 child: Center(
-                    child: _isSigning ? CircularProgressIndicator(
-                      color: Colors.white,) : Text(
+                    child: _isSigning ? const CircularProgressIndicator(
+                      color: Colors.white,) : const Text(
                       "Sign in",
                       style: TextStyle(
                           color: Colors.white, fontWeight: FontWeight.bold),
@@ -103,7 +105,7 @@ class _SignInScreenState extends State<LoginPage> {
               ),
             ),
 
-            SizedBox(height: 32.0),
+            const SizedBox(height: 32.0),
             ElevatedButton(
               onPressed: () async {
                 _signInWithGoogle();
@@ -115,7 +117,7 @@ class _SignInScreenState extends State<LoginPage> {
                   color: Colors.red,
                   borderRadius: BorderRadius.circular(50),
                 ),
-                child: Row(mainAxisAlignment: MainAxisAlignment.center,
+                child: const Row(mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Icon(FontAwesomeIcons.google, color: Colors.white,),
                     SizedBox(width: 5,),
@@ -131,25 +133,25 @@ class _SignInScreenState extends State<LoginPage> {
                 ),
               ),
             ),
-            SizedBox(
+            const SizedBox(
               height: 20,
             ),
 
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text("Don't have an account?"),
-                SizedBox(
+                const Text("Don't have an account?"),
+                const SizedBox(
                   width: 5,
                 ),
                 GestureDetector(
                   onTap: () {
                     Navigator.pushAndRemoveUntil(context,
-                      MaterialPageRoute(builder: (context) => SignUpPage()),
+                      MaterialPageRoute(builder: (context) => const SignUpPage()),
                           (route) => false,
                     );
                   },
-                  child: Text(
+                  child: const Text(
                     "Sign Up",
                     style: TextStyle(
                       color: Colors.blue,
@@ -188,10 +190,10 @@ class _SignInScreenState extends State<LoginPage> {
       );
       // Navigate to the next screen after successful sign-in
       Navigator.push(
-        context, MaterialPageRoute(builder: (context) => HomeScreen()),);
+        context, MaterialPageRoute(builder: (context) => const HomeScreen()),);
     } else {
       // Show a snackbar for unsuccessful sign-in
-      final snackBar = SnackBar(
+      const snackBar = SnackBar(
         content: Text('Invalid email or password'),
         duration: Duration(seconds: 2),
       );
@@ -200,10 +202,10 @@ class _SignInScreenState extends State<LoginPage> {
   }
 
   _signInWithGoogle() async {
-    final GoogleSignIn _googleSignIn = GoogleSignIn();
+    final GoogleSignIn googleSignIn = GoogleSignIn();
 
     try {
-      final GoogleSignInAccount? googleSignInAccount = await _googleSignIn
+      final GoogleSignInAccount? googleSignInAccount = await googleSignIn
           .signIn();
 
       if (googleSignInAccount != null) {
@@ -218,11 +220,11 @@ class _SignInScreenState extends State<LoginPage> {
 
         await _firebaseAuth.signInWithCredential(credential);
         Navigator.push(
-          context, MaterialPageRoute(builder: (context) => HomeScreen()),);
+          context, MaterialPageRoute(builder: (context) => const HomeScreen()),);
       }
     } catch (e) {
       // Show a snackbar for unsuccessful sign-in
-      final snackBar = SnackBar(
+      const snackBar = SnackBar(
         content: Text('some error occured'),
         duration: Duration(seconds: 2),
       );

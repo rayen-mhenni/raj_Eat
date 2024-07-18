@@ -6,7 +6,7 @@ import '../../models/product_model.dart';
 class Search extends StatefulWidget {
   final List<ProductModel> search;
 
-  Search({this.search = const []});
+  const Search({super.key, this.search = const []});
 
   @override
   _SearchState createState() => _SearchState();
@@ -25,27 +25,27 @@ class _SearchState extends State<Search> {
 
   @override
   Widget build(BuildContext context) {
-    List<ProductModel>_searchItem =searchItem(query);
+    List<ProductModel>searchFood =searchItem(query);
     return Scaffold(
       appBar: AppBar(
-        title: Text("Search"),
+        title: const Text("Search"),
         actions: [
           IconButton(
             onPressed: () {
               // Handle sort action
             },
-            icon: Icon(Icons.sort),
+            icon: const Icon(Icons.sort),
           ),
         ],
       ),
       body: ListView(
         children: [
-          ListTile(
+          const ListTile(
             title: Text("Items"),
           ),
           Container(
             height: 52,
-            margin: EdgeInsets.symmetric(horizontal: 20),
+            margin: const EdgeInsets.symmetric(horizontal: 20),
             child: TextField(
               onChanged: (value) {
 
@@ -58,18 +58,18 @@ class _SearchState extends State<Search> {
                   borderRadius: BorderRadius.circular(30),
                   borderSide: BorderSide.none,
                 ),
-                fillColor: Color(0xffc2c2c2),
+                fillColor: const Color(0xffc2c2c2),
                 filled: true,
                 hintText: "Search for items in the store",
-                suffixIcon: Icon(Icons.search),
+                suffixIcon: const Icon(Icons.search),
               ),
             ),
           ),
-          SizedBox(
+          const SizedBox(
             height: 10,
           ),
           Column(
-            children: _searchItem.map((data) {
+            children: searchFood.map((data) {
               return SingleItem(
                 isBool: false,
                 productImage: data.productImage,
@@ -77,7 +77,7 @@ class _SearchState extends State<Search> {
                 productPrice: data.productPrice,
                 productId: data.productId,
                 productQuantity: 0,
-                productUnit: ProductUnit(),
+                productUnit: const ProductUnit(),
                 onDelete: () {},
 
               );

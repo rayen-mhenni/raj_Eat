@@ -3,8 +3,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:raj_eat/models/review_cart_model.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:raj_eat/providers/review_cart_provider.dart';
 
 class ReviewCartProvider with ChangeNotifier {
   List<ReviewCartModel> reviewCartDataList = [];
@@ -72,7 +70,7 @@ class ReviewCartProvider with ChangeNotifier {
           .doc(FirebaseAuth.instance.currentUser!.uid)
           .collection("YourReviewCart")
           .get();
-      reviewCartValue.docs.forEach((element) {
+      for (var element in reviewCartValue.docs) {
         ReviewCartModel reviewCartModel = ReviewCartModel(
           cartId: element.get("cartId"),
           cartImage: element.get("cartImage"),
@@ -82,7 +80,7 @@ class ReviewCartProvider with ChangeNotifier {
           cartUnit: element.get("cartUnit"),
         );
         newList.add(reviewCartModel);
-      });
+      }
     }
 
     reviewCartDataList = newList;
@@ -96,10 +94,10 @@ class ReviewCartProvider with ChangeNotifier {
 
   getTotalPrice(){
     double total = 0.0;
-    reviewCartDataList.forEach((element) {
+    for (var element in reviewCartDataList) {
       total += element.cartPrice * element.cartQuantity;
 
-    });
+    }
     return total;
   }
 

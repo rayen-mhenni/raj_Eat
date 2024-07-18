@@ -8,6 +8,8 @@ import 'package:raj_eat/screens/check_out/google_map/google_map.dart';
 import 'package:raj_eat/widgets/costom_text_field.dart';
 
 class AddDeliverAddress extends StatefulWidget {
+  const AddDeliverAddress({super.key});
+
   @override
   _AddDeliverAddressState createState() => _AddDeliverAddressState();
 }
@@ -25,38 +27,38 @@ class _AddDeliverAddressState extends State<AddDeliverAddress> {
     CheckoutProvider checkoutProvider = Provider.of(context);
     return Scaffold(
       appBar: AppBar(
-        title: Text(
+        title: const Text(
           "Add Delivery Address",
           style: TextStyle(fontSize: 18),
         ),
       ),
     bottomNavigationBar: Container(
-    margin: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+    margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
     height: 48,
     child: checkoutProvider.isloadding == false
         ? MaterialButton(
       onPressed: () {
         checkoutProvider.validator(context, myType);
       },
-        child: Text(
-        "Add Address",
-        style: TextStyle(
-          color: textColor,
-        ),
-      ),
       color: primaryColor,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(
           30,
         ),
       ),
+        child: Text(
+        "Add Address",
+        style: TextStyle(
+          color: textColor,
+        ),
+      ),
 
-    ):Center(
+    ):const Center(
       child: CircularProgressIndicator(),
     ),
     ),
     body: Padding(
-      padding: EdgeInsets.symmetric(
+      padding: const EdgeInsets.symmetric(
         horizontal: 20,
       ),
     child: ListView(
@@ -105,34 +107,34 @@ class _AddDeliverAddressState extends State<AddDeliverAddress> {
         onTap: () {
           Navigator.of(context).push(
             MaterialPageRoute(
-              builder: (context) => CostomGoogleMap(),
+              builder: (context) => const CostomGoogleMap(),
             ),
           );
 
         },
-        child: Container(
+        child: SizedBox(
           height: 47,
           width: double.infinity,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              checkoutProvider.setLoaction == null? Text("Set Loaction"):
-              Text("Done!"),
+              checkoutProvider.setLoaction == null? const Text("Set Loaction"):
+              const Text("Done!"),
             ],
           ),
         ),
       ),
-          Divider(
+          const Divider(
             color: Colors.black,
           ),
-          ListTile(
+          const ListTile(
             title: Text("Address Type*"),
           ),
       RadioListTile(
         value: AddressTypes.Home,
         groupValue: myType,
-          title: Text("Home"),
+          title: const Text("Home"),
         onChanged: (AddressTypes? value) {
           setState(() {
             myType = value!;
@@ -146,7 +148,7 @@ class _AddDeliverAddressState extends State<AddDeliverAddress> {
           RadioListTile(
             value: AddressTypes.Work,
             groupValue: myType,
-            title: Text("Work"),
+            title: const Text("Work"),
             onChanged: (AddressTypes? value) {
               setState(() {
                 myType = value!;
@@ -160,7 +162,7 @@ class _AddDeliverAddressState extends State<AddDeliverAddress> {
       RadioListTile(
         value: AddressTypes.Other,
         groupValue: myType,
-        title: Text("Other"),
+        title: const Text("Other"),
         onChanged: (AddressTypes? value) {
           setState(() {
             myType = value!;

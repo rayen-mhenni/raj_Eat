@@ -1,7 +1,4 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:raj_eat/providers/product_provider.dart';
 import 'package:raj_eat/providers/review_cart_provider.dart';
@@ -14,6 +11,8 @@ import '../search/search.dart';
 import 'drawer_side.dart';
 
 class HomeScreen extends StatefulWidget {
+  const HomeScreen({super.key});
+
   @override
   _HomeScreenState createState() => _HomeScreenState();
 }
@@ -32,14 +31,14 @@ class _HomeScreenState extends State<HomeScreen> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text('Pizza'),
+              const Text('Pizza'),
               GestureDetector(
                 onTap: () {
                   Navigator.of(context).push(MaterialPageRoute(builder: (context) => Search(
                     search: productProvider?.getPizzaProductDataList ?? [], // Safe access and provide default value
                   )));
                 },
-                child: Text('view all', style: TextStyle(color: Colors.grey)),
+                child: const Text('view all', style: TextStyle(color: Colors.grey)),
               ),
             ],
           ),
@@ -83,7 +82,7 @@ class _HomeScreenState extends State<HomeScreen> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text('Sandwich'),
+              const Text('Sandwich'),
               GestureDetector(
                 onTap: () {
                   Navigator.of(context).push(MaterialPageRoute(builder: (context) => Search(
@@ -91,7 +90,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   )));
                 },
                 child:
-              Text('view all', style: TextStyle(color: Colors.grey),
+              const Text('view all', style: TextStyle(color: Colors.grey),
               ),
               ),
             ],
@@ -101,7 +100,7 @@ class _HomeScreenState extends State<HomeScreen> {
           scrollDirection: Axis.horizontal,
           child: Row(
               children: productProvider?.getSandwichProductDataList
-                  ?.map(
+                  .map(
                     (sandwichProductData) {
                   return  SingalProduct(
                     onTap: () {
@@ -124,7 +123,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   );
                 },
               )
-                  ?.toList() ??
+                  .toList() ??
                   [],
           ),
         ),
@@ -142,7 +141,7 @@ class _HomeScreenState extends State<HomeScreen> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text('Makloub'),
+              const Text('Makloub'),
               GestureDetector(
                 onTap: () {
                   Navigator.of(context).push(MaterialPageRoute(builder: (context) => Search(
@@ -150,7 +149,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   )));
                 },
                 child:
-              Text('view all', style: TextStyle(color: Colors.grey),
+              const Text('view all', style: TextStyle(color: Colors.grey),
               ),
               ),
             ],
@@ -160,7 +159,7 @@ class _HomeScreenState extends State<HomeScreen> {
           scrollDirection: Axis.horizontal,
           child: Row(
             children: productProvider?.getMakloubProductDataList
-                ?.map(
+                .map(
                   (makloubProductData) {
                 return  SingalProduct(
                   onTap: () {
@@ -184,7 +183,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 );
               },
             )
-                ?.toList() ??
+                .toList() ??
                 [],
           ),
         ),
@@ -213,8 +212,8 @@ class _HomeScreenState extends State<HomeScreen> {
       resizeToAvoidBottomInset: false,
      drawer: DrawerSide(userProvider: userProvider),
      appBar: AppBar(
-      iconTheme: IconThemeData(color: Colors.black),
-      title: Text('Home',
+      iconTheme: const IconThemeData(color: Colors.black),
+      title: const Text('Home',
         style: TextStyle(
           color: Colors.black,
             fontSize: 17),
@@ -277,7 +276,7 @@ class _HomeScreenState extends State<HomeScreen> {
             height: 150,
 
           decoration: BoxDecoration(
-            image: DecorationImage(
+            image: const DecorationImage(
               fit: BoxFit.cover,
               image: NetworkImage('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS_ykQZjPH3OAQTXDTc1DOIwXODiAGlrYGJUCJsdikpVQ&s '),
             ),
@@ -298,16 +297,16 @@ class _HomeScreenState extends State<HomeScreen> {
                     child: Container(
                      height: 50,
                      width: 100,
-                     decoration: BoxDecoration(
+                     decoration: const BoxDecoration(
                        color: Color(0xffd1ad17),
                        borderRadius: BorderRadius.only(
                          bottomRight: Radius.circular(50),
                          bottomLeft: Radius.circular(50),
                        ),
                      ),
-                      child: Center(
+                      child: const Center(
                         child: Text(
-                          'RajEat',
+                          'RajEat Test',
                           style: TextStyle(
                             fontSize: 20,
                             color: Colors.white,
@@ -329,8 +328,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                color: Colors.green[100],
                                fontWeight: FontWeight.bold),
                          ),
-                         Padding(
-                           padding: const EdgeInsets.only(left: 20),
+                         const Padding(
+                           padding: EdgeInsets.only(left: 20),
                            child: Text(
                              'reserve now!',
                              style: TextStyle(

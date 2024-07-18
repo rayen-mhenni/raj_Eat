@@ -82,24 +82,24 @@ class CheckoutProvider with ChangeNotifier {
     List<DeliveryAddressModel> newList = [];
 
     DeliveryAddressModel deliveryAddressModel;
-    DocumentSnapshot _db = await FirebaseFirestore.instance
+    DocumentSnapshot db = await FirebaseFirestore.instance
         .collection("AddDeliverAddress")
         .doc(FirebaseAuth.instance.currentUser!
         .uid)
         .get();
-    if (_db.exists) {
+    if (db.exists) {
       deliveryAddressModel = DeliveryAddressModel(
-        firstName: _db.get("firstname"),
-        lastName: _db.get("lastname"),
-        addressType: _db.get("addressType"),
-        aera: _db.get("aera"),
-        alternateMobileNo: _db.get("alternateMobileNo"),
-        city: _db.get("city"),
-        landMark: _db.get("landmark"),
-        mobileNo: _db.get("mobileNo"),
-        pinCode: _db.get("pincode"),
-        scoirty: _db.get("scoiety"),
-        street: _db.get("street"),
+        firstName: db.get("firstname"),
+        lastName: db.get("lastname"),
+        addressType: db.get("addressType"),
+        aera: db.get("aera"),
+        alternateMobileNo: db.get("alternateMobileNo"),
+        city: db.get("city"),
+        landMark: db.get("landmark"),
+        mobileNo: db.get("mobileNo"),
+        pinCode: db.get("pincode"),
+        scoirty: db.get("scoiety"),
+        street: db.get("street"),
       );
       newList.add(deliveryAddressModel);
       notifyListeners();

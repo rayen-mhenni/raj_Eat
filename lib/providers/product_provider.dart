@@ -36,11 +36,10 @@ class ProductProvider with ChangeNotifier {
     QuerySnapshot value =
     await FirebaseFirestore.instance.collection("PizzaProduct").get();
 
-    value.docs.forEach((element) {
+    for (var element in value.docs) {
       productModels(element);
       newList.add(productModel);
-    },
-    );
+    }
     pizzaProductList = newList;
     notifyListeners();
   }
@@ -59,12 +58,11 @@ class ProductProvider with ChangeNotifier {
     QuerySnapshot value =
     await FirebaseFirestore.instance.collection("SandwichProduct").get();
 
-    value.docs.forEach((element) {
+    for (var element in value.docs) {
       productModels(element);
 
       newList.add(productModel);
-    },
-    );
+    }
     SandwichProductList = newList;
     notifyListeners();
   }
@@ -84,12 +82,11 @@ class ProductProvider with ChangeNotifier {
     QuerySnapshot value =
     await FirebaseFirestore.instance.collection("MakloubProduct").get();
 
-    value.docs.forEach((element) {
+    for (var element in value.docs) {
       productModels(element);
 
       newList.add(productModel);
-    },
-    );
+    }
     MakloubProductList = newList;
     notifyListeners();
   }

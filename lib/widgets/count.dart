@@ -12,7 +12,7 @@ class Count extends StatefulWidget {
   final int productPrice;
   var productUnit;
 
-  Count({
+  Count({super.key, 
     required  this.productName,
     required  this.productUnit,
     required  this.productId,
@@ -37,7 +37,7 @@ class _CountState extends State<Count> {
         .get()
         .then(
           (value) => {
-        if (this.mounted)
+        if (mounted)
           {
             if (value.exists)
               {
@@ -92,11 +92,11 @@ class _CountState extends State<Count> {
             }
             },
             child:
-            Icon(Icons.remove,size: 15,color: Color(0xffd0b84c)),
+            const Icon(Icons.remove,size: 15,color: Color(0xffd0b84c)),
            ),
             Text(
             "$count",
-            style: TextStyle(
+            style: const TextStyle(
               color: Colors.orange,
               fontWeight: FontWeight.bold,),
           ),
@@ -114,7 +114,7 @@ class _CountState extends State<Count> {
               );
             },
             child:
-             Icon(Icons.add,size: 15,color: Color(0xffd0b84c),
+             const Icon(Icons.add,size: 15,color: Color(0xffd0b84c),
             ),
           ),
 

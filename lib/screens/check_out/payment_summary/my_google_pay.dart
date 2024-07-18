@@ -1,11 +1,10 @@
 import 'package:pay/pay.dart';
 import 'package:flutter/material.dart';
-import 'dart:convert';
 import 'package:flutter/services.dart' show rootBundle;
 
 class MyGooglePay extends StatefulWidget {
   final total;
-  MyGooglePay({this.total});
+  const MyGooglePay({super.key, this.total});
   @override
   _MyGooglePayState createState() => _MyGooglePayState();
 }
@@ -35,7 +34,7 @@ class _MyGooglePayState extends State<MyGooglePay> {
   @override
   Widget build(BuildContext context) {
     if (_paymentConfiguration == null) {
-      return Center(child: CircularProgressIndicator());
+      return const Center(child: CircularProgressIndicator());
     }
 
     return GooglePayButton(
