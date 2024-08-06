@@ -12,7 +12,7 @@ class Count extends StatefulWidget {
   final int productPrice;
   var productUnit;
 
-  Count({super.key, 
+  Count({super.key,
     required  this.productName,
     required  this.productUnit,
     required  this.productId,
@@ -57,90 +57,90 @@ class _CountState extends State<Count> {
     getAddAndQuantity();
     ReviewCartProvider reviewCartProvider = Provider.of(context);
     return Container(
-      height: 30,
-      width: 50,
-      decoration: BoxDecoration(
-          border: Border.all(color: Colors.grey),
-          borderRadius: BorderRadius.circular(8)
-      ),
-      child: isTrue == true
-          ?Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-           InkWell(
-            onTap: (){
+        height: 30,
+        width: 50,
+        decoration: BoxDecoration(
+            border: Border.all(color: Colors.grey),
+            borderRadius: BorderRadius.circular(8)
+        ),
+        child: isTrue == true
+            ?Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            InkWell(
+              onTap: (){
 
 
-            if (count == 1){
-              setState(() {
-                isTrue = false;
-              });
-              reviewCartProvider.reviewCartDataDelete(widget.productId);
-            }
+                if (count == 1){
+                  setState(() {
+                    isTrue = false;
+                  });
+                  reviewCartProvider.reviewCartDataDelete(widget.productId);
+                }
 
-            else if (count > 1){setState(() {
-              count --;
-            });
-            reviewCartProvider.updateReviewCartData(
-              cartId: widget.productId,
-              cartImage: widget.productImage,
-              cartName: widget.productName,
-              cartPrice: widget.productPrice,
-              cartQuantity: count,
+                else if (count > 1){setState(() {
+                  count --;
+                });
+                reviewCartProvider.updateReviewCartData(
+                  cartId: widget.productId,
+                  cartImage: widget.productImage,
+                  cartName: widget.productName,
+                  cartPrice: widget.productPrice,
+                  cartQuantity: count,
 
-            );
-            }
-            },
-            child:
-            const Icon(Icons.remove,size: 15,color: Color(0xffd0b84c)),
-           ),
+                );
+                }
+              },
+              child:
+              const Icon(Icons.remove,size: 15,color: Color(0xffd0b84c)),
+            ),
             Text(
-            "$count",
-            style: const TextStyle(
-              color: Colors.orange,
-              fontWeight: FontWeight.bold,),
-          ),
-          InkWell(
+              "$count",
+              style: const TextStyle(
+                color: Colors.orange,
+                fontWeight: FontWeight.bold,),
+            ),
+            InkWell(
+              onTap: (){
+                setState(() {
+                  count ++;
+                });
+                reviewCartProvider.updateReviewCartData(
+                  cartId: widget.productId,
+                  cartImage: widget.productImage,
+                  cartName: widget.productName,
+                  cartPrice: widget.productPrice,
+                  cartQuantity: count,
+                );
+              },
+              child:
+              const Icon(Icons.add,size: 15,color: Color(0xffd0b84c),
+              ),
+            ),
+
+          ],
+        ):Center(
+          child: InkWell(
             onTap: (){
               setState(() {
-                count ++;
+                isTrue = true;
               });
-              reviewCartProvider.updateReviewCartData(
+              reviewCartProvider.addReviewCartData(
                 cartId: widget.productId,
-                cartImage: widget.productImage,
                 cartName: widget.productName,
+                cartImage: widget.productImage,
                 cartPrice: widget.productPrice,
                 cartQuantity: count,
+                cartUnit: widget.productUnit,
+
               );
             },
-            child:
-             const Icon(Icons.add,size: 15,color: Color(0xffd0b84c),
+            child: Text(
+              "ADD",
+              style: TextStyle(color: primaryColor),
             ),
           ),
-
-        ],
-      ):Center(
-        child: InkWell(
-          onTap: (){
-           setState(() {
-             isTrue = true;
-           });
-           reviewCartProvider.addReviewCartData(
-             cartId: widget.productId,
-             cartName: widget.productName,
-             cartImage: widget.productImage,
-             cartPrice: widget.productPrice,
-             cartQuantity: count,
-             cartUnit: widget.productUnit,
-
-           );
-          },
-          child: Text(
-            "ADD",
-            style: TextStyle(color: primaryColor),
-          ),
-        ),
-      )
+        )
     );
   }
 }

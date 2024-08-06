@@ -111,5 +111,32 @@ class ReviewCartProvider with ChangeNotifier {
         .delete();
     notifyListeners();
   }
+  Future<QuerySnapshot<Object?>> getAllReviewCartData() async {
+    List<ReviewCartModel> cartList = [];
 
+    // Check if currentUser is not null before accessing uid
+      QuerySnapshot reviewCartValue = await FirebaseFirestore.instance
+          .collection("ReviewCart")
+          .get();
+    print('QuerySnapshot: ${reviewCartValue.docs}');
+
+    // for (var element in reviewCartValue.docs) {
+    //     ReviewCartModel reviewCartModel = Prder(
+    //       cartId: element.get("cartId"),
+    //       cartImage: element.get("cartImage"),
+    //       cartName: element.get("cartName"),
+    //       cartPrice: element.get("cartPrice"),
+    //       cartQuantity: element.get("cartQuantity"),
+    //       cartUnit: element.get("cartUnit"),
+    //     );
+    //     if (cartList.contains(reviewCartModel) == false) {
+    //       cartList.contains(reviewCartModel);
+    //     }
+    // }
+
+
+    // reviewCartDataList = cartList;
+
+    return reviewCartValue;
+  }
 }

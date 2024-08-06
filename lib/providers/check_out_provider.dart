@@ -114,7 +114,7 @@ class CheckoutProvider with ChangeNotifier {
   }
 
 
-   addPlaceOderData({
+  addPlaceOderData({
     required List<ReviewCartModel> oderItemList,
     var subTotal,
     var address,

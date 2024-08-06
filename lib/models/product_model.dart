@@ -13,6 +13,6 @@ class ProductModel {
     required this.productImage,
     required this.productPrice,
     required this.productQuantity,
-     this.productUnit,
+    this.productUnit,
   });
 }

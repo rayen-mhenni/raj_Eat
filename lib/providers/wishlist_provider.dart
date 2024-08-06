@@ -7,7 +7,7 @@ class WishListProvider with ChangeNotifier {
   addWishListData({
     required String wishListId,
     required String wishListName,
-     var wishListPrice,
+    var wishListPrice,
     required String wishListImage,
     required int wishListQuantity,
   }) {
@@ -37,16 +37,16 @@ class WishListProvider with ChangeNotifier {
         .collection("YourWishList")
         .get();
     for (var element in value.docs) {
-        ProductModel productModel = ProductModel(
-          productId: element.get("wishListId"),
-          productImage: element.get("wishListImage"),
-          productName: element.get("wishListName"),
-          productPrice: element.get("wishListPrice"),
-          productQuantity: element.get("wishListQuantity"),
+      ProductModel productModel = ProductModel(
+        productId: element.get("wishListId"),
+        productImage: element.get("wishListImage"),
+        productName: element.get("wishListName"),
+        productPrice: element.get("wishListPrice"),
+        productQuantity: element.get("wishListQuantity"),
 
-        );
-        newList.add(productModel);
-      }
+      );
+      newList.add(productModel);
+    }
     wishList = newList;
     notifyListeners();
   }

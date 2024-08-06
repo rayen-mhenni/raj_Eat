@@ -15,7 +15,7 @@ class Search extends StatefulWidget {
 class _SearchState extends State<Search> {
   String query = '';
 
-   searchItem(String query) {
+  searchItem(String query) {
     List<ProductModel> searchFood = widget.search.where((element) {
       return element.productName.toLowerCase().contains(query);
     }).toList();

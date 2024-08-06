@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:raj_eat/config/colors.dart';
 import 'package:raj_eat/providers/check_out_provider.dart';
@@ -13,75 +15,103 @@ class CostomGoogleMap extends StatefulWidget {
 }
 
 class _GoogleMapState extends State<CostomGoogleMap> {
-  final LatLng _initialcameraposition = const LatLng(36.7948, 10.0608);
+  final Completer<GoogleMapController> _mapController = Completer<GoogleMapController>();
+  Set<Marker> _markers = {};
+
+  static const LatLng _initialcameraposition = LatLng(36.8065, 10.1815);
+
   late GoogleMapController controller;
   final Location _location = Location();
+
   void _onMapCreated(GoogleMapController value) {
     controller = value;
     _location.onLocationChanged.listen((event) {
       controller.animateCamera(
         CameraUpdate.newCameraPosition(
-          CameraPosition(
-              target: _initialcameraposition, zoom: 13),
+          CameraPosition(target: _initialcameraposition, zoom: 13),
         ),
       );
     });
-    Set<Marker> markers = {};
   }
+
+  LatLng? _currentP = null;
+
+  @override
+  void initState() {
+    super.initState();
+    getLocationUpdates();
+  }
+
   @override
   Widget build(BuildContext context) {
     CheckoutProvider checkoutProvider = Provider.of(context);
     return Scaffold(
-        body: SafeArea(
+      body: SafeArea(
         child: SizedBox(
-        height: MediaQuery.of(context).size.height,
-        width: MediaQuery.of(context).size.width,
+          height: MediaQuery.of(context).size.height,
+          width: MediaQuery.of(context).size.width,
           child: Stack(
-           children: [
-            GoogleMap(initialCameraPosition: CameraPosition(
-              target: _initialcameraposition,zoom: 13,
-            ),
-              markers: {
-              Marker(
-                markerId: MarkerId("marker_1"),
-                icon: BitmapDescriptor.defaultMarker,
-                position: _initialcameraposition
+            children: [
+              _currentP == null
+                  ? const Center(
+                child: Text("Loading..."),
               )
-              },
-              mapType: MapType.normal,
-              onMapCreated: _onMapCreated,
-            ),
-          Positioned(
-            bottom: 0,
-            left: 0,
-            right: 0,
-            child: Container(
-              height: 50,
-              width: double.infinity,
-              margin:
-              const EdgeInsets.only(right: 60, left: 10, bottom: 40, top: 40),
-              child: MaterialButton(
-                onPressed: () async {
-                  await _location.getLocation().then((value) {
-                    setState(() {
-                      checkoutProvider.setLoaction = value;
-                    });
-                  });
-                  Navigator.of(context).pop();
+                  : GoogleMap(
+                onMapCreated: _onMapCreated,
+                initialCameraPosition: CameraPosition(
+                  target: _initialcameraposition,
+                  zoom: 11.0,
+                ),
+                onTap: (LatLng latLng) {
+                  _markers.add(Marker(markerId: MarkerId('mark'), position: latLng));
+                  setState(() {});
                 },
-                color: primaryColor,
-                shape: const StadiumBorder(),
-                child: const Text("Set Location"),
+                markers: Set<Marker>.of(_markers),
+                mapType: MapType.normal,
               ),
-            ),
-          ),
+             Positioned(
+                bottom: 0,
+                left: 0,
+                right: 0,
+                child: Container(
+                  height: 50,
+                  width: double.infinity,
+                  margin: const EdgeInsets.only(
+                      right: 60, left: 10, bottom: 40, top: 40),
+                  child: MaterialButton(
+                    onPressed: () async {
+                      await _location.getLocation().then((value) {
+                        setState(() {
+                          checkoutProvider.setLoaction = value;
+                        });
+                      });
+                      Navigator.of(context).pop();
+                    },
+                    color: primaryColor,
+                    shape: const StadiumBorder(),
+                    child: const Text("Set Location"),
+                  ),
+                ),
+              ),
             ],
-    ),
+          ),
         ),
-        ),
+      ),
     );
   }
-  Future<void> getLocationUpdates() async{
+
+ Future<void> _cameraToPosition(LatLng pos) async {
+    final GoogleMapController controller = await _mapController.future;
+    CameraPosition _newCameraPosition = CameraPosition(
+      target: pos,
+
+    );
+    await controller.animateCamera(
+      CameraUpdate.newCameraPosition(_newCameraPosition),
+    );
+  }
+
+  Future<void> getLocationUpdates() async {
     bool _serviceEnabled;
     PermissionStatus _permissionGranted;
 
@@ -99,7 +129,14 @@ class _GoogleMapState extends State<CostomGoogleMap> {
         return;
       }
     }
-    
+    _location.onLocationChanged.listen((LocationData currentLocation) {
+      if (currentLocation.latitude != null &&
+          currentLocation.longitude != null) {
+        setState(() {
+          _currentP = LatLng(currentLocation.latitude!, currentLocation.longitude!);
 
+        });
+      }
+    });
   }
-
+}

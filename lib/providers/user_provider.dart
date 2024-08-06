@@ -11,6 +11,7 @@ class UserProvider with ChangeNotifier {
     required String userName,
     required String userImage,
     required String userEmail,
+    required String role,
   }) async {
     await FirebaseFirestore.instance
         .collection("usersData")
@@ -21,6 +22,7 @@ class UserProvider with ChangeNotifier {
         "userEmail": userEmail,
         "userImage": userImage,
         "userUid": currentUser.uid,
+        "role": role,
       },
     );
   }
@@ -36,6 +38,7 @@ class UserProvider with ChangeNotifier {
         userImage: value.get("userImage"),
         userName: value.get("userName"),
         userUid: value.get("userUid"),
+        role: value.get("role"),
       );
       notifyListeners();
     }

@@ -4,20 +4,20 @@ import 'package:raj_eat/repository/firebase_auth_service.dart';
 import 'package:raj_eat/singin/login_page.dart';
 import 'package:raj_eat/widgets/form_container_widget.dart';
 
-class SignUpPage extends StatefulWidget {
-  const SignUpPage({super.key});
+class SingUpDelivery extends StatefulWidget {
+  const SingUpDelivery({super.key});
 
   @override
-  State<SignUpPage> createState() => _SignUpPageState();
+  State<SingUpDelivery> createState() => _SingUpDeliveryState();
 }
 
-class _SignUpPageState extends State<SignUpPage> {
+class _SingUpDeliveryState extends State<SingUpDelivery> {
   final FirebaseAuthService _auth = FirebaseAuthService();
 
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  String _role = 'client'; // Rôle par défaut
+  String _role = 'delivery'; // Rôle par défaut
 
   bool isSigningUp = false;
 
@@ -43,7 +43,7 @@ class _SignUpPageState extends State<SignUpPage> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               const Text(
-                "Sign Up",
+                "Sign Up Delivery",
                 style: TextStyle(fontSize: 27, fontWeight: FontWeight.bold),
               ),
               const SizedBox(
@@ -76,7 +76,7 @@ class _SignUpPageState extends State<SignUpPage> {
               DropdownButtonFormField<String>(
                 value: _role,
                 items: const [
-                  DropdownMenuItem(value: 'client', child: Text('Client')),
+                  DropdownMenuItem(value: 'delivery', child: Text('Delivery')),
                 ],
                 onChanged: (String? newValue) {
                   setState(() {

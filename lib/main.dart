@@ -38,8 +38,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider<UserProvider>(
         create: (context) => UserProvider(),
         ),
-        ChangeNotifierProvider<ReviewCartProvider>(
-          create: (context) => ReviewCartProvider(),
+        ChangeNotifierProvider(create: (context) => ReviewCartProvider(),
         ),
         ChangeNotifierProvider<WishListProvider>(
           create: (context) => WishListProvider(),

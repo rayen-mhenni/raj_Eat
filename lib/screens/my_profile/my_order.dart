@@ -7,15 +7,11 @@ import 'package:raj_eat/screens/check_out/delivery_details/delivery_details.dart
 import '../../config/colors.dart';
 import '../../widgets/single_item.dart';
 
+class MyOrder extends StatelessWidget {
+  const MyOrder({super.key});
 
-
-class ReviewCart extends StatelessWidget {
-  final ReviewCartProvider reviewCartProvider;
-
-  const ReviewCart({super.key, required this.reviewCartProvider});
-
-  showAlertDialog(BuildContext context, ReviewCartModel delete) {
-    // set up the buttons
+  void showAlertDialog(BuildContext context, ReviewCartModel delete) {
+    // Set up the buttons
     Widget cancelButton = TextButton(
       child: const Text("No"),
       onPressed: () {
@@ -25,12 +21,13 @@ class ReviewCart extends StatelessWidget {
     Widget continueButton = TextButton(
       child: const Text("Yes"),
       onPressed: () {
-        reviewCartProvider.reviewCartDataDelete(delete.cartId);
+        Provider.of<ReviewCartProvider>(context, listen: false)
+            .reviewCartDataDelete(delete.cartId);
         Navigator.of(context).pop();
       },
     );
 
-    // set up the AlertDialog
+    // Set up the AlertDialog
     AlertDialog alert = AlertDialog(
       title: const Text("Cart Product"),
       content: const Text("Are you sure you want to delete this cart product?"),
@@ -40,7 +37,7 @@ class ReviewCart extends StatelessWidget {
       ],
     );
 
-    // show the dialog
+    // Show the dialog
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -49,57 +46,21 @@ class ReviewCart extends StatelessWidget {
     );
   }
 
-
-
-
-
-
   @override
   Widget build(BuildContext context) {
-    // Remove the assignment of reviewCartProvider here
-    // reviewCartProvider = Provider.of<ReviewCartProvider>(context); // Remove this line
-    // reviewCartProvider.getReviewCartData(); // Remove this line
     return Scaffold(
-      bottomNavigationBar: ListTile(
-        title: const Text("Total Amount"),
-        subtitle: Text(
-          "d ${reviewCartProvider.getTotalPrice()}",
-          style: TextStyle(
-            color: Colors.green[900],
-          ),
-        ),
-        trailing: SizedBox(
-          width: 160,
-          child: MaterialButton(
-            color: primaryColor,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(30),
-            ),
-            onPressed: () {
-              if(reviewCartProvider.getReviewCartDataList.isEmpty){
-                Fluttertoast.showToast(msg: "No Cart Data Found");
-              } else {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => const DeliveryDetails(),
-                  ),
-                );
-              }
-            },
-            child: const Text('submit'),
-
-          ),
-        ),
+      bottomNavigationBar: SizedBox(
+        height: 0, // Set height to 0 or remove this widget if you don't want any BottomAppBar
       ),
       appBar: AppBar(
         title: Text(
-          "Review Cart",
+          "My Order",
           style: TextStyle(color: textColor, fontSize: 18),
         ),
       ),
       body: Consumer<ReviewCartProvider>(
         builder: (context, reviewCartProvider, _) {
-          reviewCartProvider.getReviewCartData();
+          reviewCartProvider.getReviewCartData(); // Fetch data here if needed
           return reviewCartProvider.getReviewCartDataList.isEmpty
               ? const Center(
             child: Text("NO DATA"),
@@ -107,8 +68,7 @@ class ReviewCart extends StatelessWidget {
               : ListView.builder(
             itemCount: reviewCartProvider.getReviewCartDataList.length,
             itemBuilder: (context, index) {
-              ReviewCartModel data =
-              reviewCartProvider.getReviewCartDataList[index];
+              ReviewCartModel data = reviewCartProvider.getReviewCartDataList[index];
               return Column(
                 children: [
                   const SizedBox(
@@ -116,7 +76,7 @@ class ReviewCart extends StatelessWidget {
                   ),
                   SingleItem(
                     isBool: true,
-                    wishList: false,
+                    wishList: true,
                     productImage: data.cartImage,
                     productPrice: data.cartPrice,
                     productName: data.cartName,

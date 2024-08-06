@@ -1,19 +1,18 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:raj_eat/screens/home/admin_screen.dart';
+import 'package:raj_eat/screens/home/delivery_screens.dart';
 import 'package:raj_eat/screens/home/home_screen.dart';
-
+import 'package:raj_eat/singup/forgot_password_page.dart';
 import 'package:raj_eat/singup/sing_up_page.dart';
-
 import '../providers/user_provider.dart';
 import '../repository/firebase_auth_service.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
-
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
-
 
   @override
   _SignInScreenState createState() => _SignInScreenState();
@@ -21,7 +20,6 @@ class LoginPage extends StatefulWidget {
 
 class _SignInScreenState extends State<LoginPage> {
   late UserProvider userProvider;
-
   bool _isSigning = false;
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
@@ -36,39 +34,38 @@ class _SignInScreenState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       resizeToAvoidBottomInset: false,
-
       body: SizedBox(
-
         height: double.infinity,
         width: double.infinity,
-
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-        SizedBox(
-          height: 200,
-          width: double.infinity,
-          child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-          Text(
-            'RajEat',
-            style:
-            TextStyle(fontSize: 50, color: Colors.white, shadows: [
-              BoxShadow(
-                blurRadius: 5,
-                color: Colors.green.shade900,
-                offset: const Offset(3, 3),
-              )
-            ]),
-          ),
-              ],
-          ),
-        ),
+            SizedBox(
+              height: 200,
+              width: double.infinity,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Text(
+                    'RajEat',
+                    style: TextStyle(
+                      fontSize: 50,
+                      color: Colors.white,
+                      shadows: [
+                        BoxShadow(
+                          blurRadius: 5,
+                          color: Colors.green.shade900,
+                          offset: const Offset(3, 3),
+                        )
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
             TextFormField(
               controller: _emailController,
               decoration: const InputDecoration(
@@ -96,12 +93,17 @@ class _SignInScreenState extends State<LoginPage> {
                   borderRadius: BorderRadius.circular(50),
                 ),
                 child: Center(
-                    child: _isSigning ? const CircularProgressIndicator(
-                      color: Colors.white,) : const Text(
-                      "Sign in",
-                      style: TextStyle(
-                          color: Colors.white, fontWeight: FontWeight.bold),
-                    )),
+                  child: _isSigning
+                      ? const CircularProgressIndicator(
+                    color: Colors.white,
+                  )
+                      : const Text(
+                    "Sign in",
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold),
+                  ),
+                ),
               ),
             ),
 
@@ -117,10 +119,16 @@ class _SignInScreenState extends State<LoginPage> {
                   color: Colors.red,
                   borderRadius: BorderRadius.circular(50),
                 ),
-                child: const Row(mainAxisAlignment: MainAxisAlignment.center,
+                child: const Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(FontAwesomeIcons.google, color: Colors.white,),
-                    SizedBox(width: 5,),
+                    Icon(
+                      FontAwesomeIcons.google,
+                      color: Colors.white,
+                    ),
+                    SizedBox(
+                      width: 5,
+                    ),
                     Text(
                       "Sign in with Google",
                       style: TextStyle(
@@ -128,15 +136,30 @@ class _SignInScreenState extends State<LoginPage> {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-
                   ],
+                ),
+              ),
+            ),
+            const SizedBox(height: 16.0),
+            GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const ForgotPasswordPage()),
+                );
+              },
+              child: const Text(
+                "Mot de passe oublié?",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: Colors.blue,
+                  fontWeight: FontWeight.bold,
                 ),
               ),
             ),
             const SizedBox(
               height: 20,
             ),
-
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -146,8 +169,10 @@ class _SignInScreenState extends State<LoginPage> {
                 ),
                 GestureDetector(
                   onTap: () {
-                    Navigator.pushAndRemoveUntil(context,
-                      MaterialPageRoute(builder: (context) => const SignUpPage()),
+                    Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const SignUpPage()),
                           (route) => false,
                     );
                   },
@@ -161,7 +186,6 @@ class _SignInScreenState extends State<LoginPage> {
                 ),
               ],
             ),
-
           ],
         ),
       ),
@@ -175,24 +199,43 @@ class _SignInScreenState extends State<LoginPage> {
     String email = _emailController.text.trim();
     String password = _passwordController.text.trim();
 
-    // Call your authentication service to sign in
     User? user = await _authService.signInWithEmailAndPassword(email, password);
 
     setState(() {
       _isSigning = false;
     });
+
     if (user != null) {
-      userProvider.addUserData(
-        currentUser: user,
-        userEmail: user.email??'',
-        userImage: user.photoURL??'',
-        userName: user.displayName??'',
-      );
-      // Navigate to the next screen after successful sign-in
-      Navigator.push(
-        context, MaterialPageRoute(builder: (context) => const HomeScreen()),);
+      String? role = await _authService.getUserRole(user.uid);
+
+      if (role != null) {
+        userProvider.addUserData(
+          currentUser: user,
+          userEmail: user.email ?? '',
+          userImage: user.photoURL ?? '',
+          userName: user.displayName ?? '',
+          role: role,
+        );
+
+        if (role == 'admin') {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const AdminScreen()),
+          );
+        }
+       else if (role == 'delivery') {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const DeliveryScreen()),
+          );
+        } else {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => HomeScreen()),
+          );
+        }
+      }
     } else {
-      // Show a snackbar for unsuccessful sign-in
       const snackBar = SnackBar(
         content: Text('Invalid email or password'),
         duration: Duration(seconds: 2),
@@ -205,31 +248,57 @@ class _SignInScreenState extends State<LoginPage> {
     final GoogleSignIn googleSignIn = GoogleSignIn();
 
     try {
-      final GoogleSignInAccount? googleSignInAccount = await googleSignIn
-          .signIn();
+      final GoogleSignInAccount? googleSignInAccount = await googleSignIn.signIn();
 
       if (googleSignInAccount != null) {
-        final GoogleSignInAuthentication googleSignInAuthentication = await
-        googleSignInAccount.authentication;
+        final GoogleSignInAuthentication googleSignInAuthentication = await googleSignInAccount.authentication;
 
         final AuthCredential credential = GoogleAuthProvider.credential(
           idToken: googleSignInAuthentication.idToken,
           accessToken: googleSignInAuthentication.accessToken,
         );
 
+        UserCredential userCredential = await _firebaseAuth.signInWithCredential(credential);
+        User? user = userCredential.user;
 
-        await _firebaseAuth.signInWithCredential(credential);
-        Navigator.push(
-          context, MaterialPageRoute(builder: (context) => const HomeScreen()),);
+        if (user != null) {
+          String? role = await _authService.getUserRole(user.uid);
+
+          if (role != null) {
+            userProvider.addUserData(
+              currentUser: user,
+              userEmail: user.email ?? '',
+              userImage: user.photoURL ?? '',
+              userName: user.displayName ?? '',
+              role: role,
+            );
+
+            if (role == 'admin') {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const AdminScreen()),
+              );
+            }else if (role == 'delivery') {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const DeliveryScreen()),
+              );
+            }
+            else {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => HomeScreen()),
+              );
+            }
+          }
+        }
       }
     } catch (e) {
-      // Show a snackbar for unsuccessful sign-in
       const snackBar = SnackBar(
-        content: Text('some error occured'),
+        content: Text('Some error occurred'),
         duration: Duration(seconds: 2),
       );
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
     }
   }
 }
-

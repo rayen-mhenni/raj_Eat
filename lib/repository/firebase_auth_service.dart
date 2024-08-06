@@ -1,47 +1,38 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:get/get.dart';
-
-import 'package:raj_eat/repository/exceptions/signup_email_password_failure.dart';
-import 'package:raj_eat/singin/login_page.dart';
-import 'package:raj_eat/singup/sing_up_page.dart';
-
-
 
 class FirebaseAuthService {
-
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-
-  Future<User?> signUpWithEmailAndPassword(String email, String password) async {
-
-    try {
-      UserCredential credential =await _auth.createUserWithEmailAndPassword(email: email, password: password);
-      return credential.user;
-    } on FirebaseAuthException catch (e) {
-
-      if (e.code == 'email-already-in-use') {
-        print( 'The email address is already in use.');
-      } else {
-        print(  'An error occurred: ${e.code}');
-      }
-    }
-    return null;
-
-  }
+  final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   Future<User?> signInWithEmailAndPassword(String email, String password) async {
-
     try {
-      UserCredential credential =await _auth.signInWithEmailAndPassword(email: email, password: password);
-      return credential.user;
-    } on FirebaseAuthException catch (e) {
-      if (e.code == 'user-not-found' || e.code == 'wrong-password') {
-        print(  'Invalid email or password.');
-      } else {
-        print(  'An error occurred: ${e.code}');
-      }
-
+      UserCredential userCredential = await _firebaseAuth.signInWithEmailAndPassword(email: email, password: password);
+      return userCredential.user;
+    } catch (e) {
+      print(e);
+      return null;
     }
-    return null;
+  }
 
+  Future<void> signUpWithEmailAndPassword(String email, String password, String role) async {
+    try {
+      UserCredential userCredential = await _firebaseAuth.createUserWithEmailAndPassword(email: email, password: password);
+      User? user = userCredential.user;
+
+      if (user != null) {
+        await _firestore.collection('users').doc(user.uid).set({
+          'email': email,
+          'role': role,
+        });
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  Future<String?> getUserRole(String uid) async {
+    DocumentSnapshot documentSnapshot = await _firestore.collection('users').doc(uid).get();
+    return documentSnapshot['role'] as String?;
   }
 }

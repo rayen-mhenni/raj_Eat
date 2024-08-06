@@ -19,14 +19,14 @@ class ProductProvider with ChangeNotifier {
   productModels(QueryDocumentSnapshot element) {
 
     productModel = ProductModel(
-        productImage: element.get("productImage"),
-        productName: element.get("productName"),
-        productPrice: element.get("productPrice"),
-        productId: element.get("productId"),
-        productQuantity: 0,
-        productUnit: element.get("productUnit"),
-        );
-   search.add(productModel);
+      productImage: element.get("productImage"),
+      productName: element.get("productName"),
+      productPrice: element.get("productPrice"),
+      productId: element.get("productId"),
+      productQuantity: 0,
+      productUnit: element.get("productUnit"),
+    );
+    search.add(productModel);
   }
 
   List<ProductModel> pizzaProductList = [];
