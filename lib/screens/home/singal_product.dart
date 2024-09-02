@@ -34,12 +34,6 @@ class _SingalProductState extends State<SingalProduct> {
   var firstValue;
   @override
   Widget build(BuildContext context) {
-    widget.productUnit.productUnit?.firstWhere((element) {
-      setState(() {
-        firstValue = element;
-      });
-      return true;
-    });
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: Row(
@@ -81,7 +75,7 @@ class _SingalProductState extends State<SingalProduct> {
                           ),
                         ),
                         Text(
-                          '${widget.productPrice}D/${unitData ?? firstValue}',
+                          '${widget.productPrice}D',
                           style: const TextStyle(
                             color: Colors.grey,
                           ),
@@ -91,44 +85,6 @@ class _SingalProductState extends State<SingalProduct> {
                         ),
                         Row(
                           children: [
-                            Expanded(
-                              child: ProductUnit(
-                                onTap: () {
-                                  showModalBottomSheet(
-                                    context: context,
-                                    builder: (context) {
-                                      return Column(
-                                        mainAxisSize: MainAxisSize.min,
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: widget.productUnit.productUnit
-                                            ?.map<Widget>((data) {
-                                          return Column(
-                                            children: [
-                                              Padding(
-                                                padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-                                                child: InkWell(
-                                                  onTap: () async {
-                                                    setState(() {
-                                                      unitData = data;
-                                                    });
-                                                    Navigator.of(context).pop();
-                                                  },
-                                                  child: Text(
-                                                    data,
-                                                    style: TextStyle(color: primaryColor, fontSize: 18),
-                                                  ),
-                                                ),
-                                              ),
-                                            ],
-                                          );
-                                        }).toList() ?? [],
-                                      );
-                                    },
-                                  );
-                                },
-                                title: unitData ?? firstValue,
-                              ),
-                            ),
                             const SizedBox(
                               width: 5,
                             ),
@@ -137,7 +93,6 @@ class _SingalProductState extends State<SingalProduct> {
                               productImage: widget.productImage,
                               productName: widget.productName,
                               productPrice: widget.productPrice,
-                              productUnit: unitData ?? firstValue,
 
                             ),
                           ],

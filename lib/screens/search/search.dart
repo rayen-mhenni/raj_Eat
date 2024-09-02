@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:raj_eat/widgets/product_unit.dart';
 import 'package:raj_eat/widgets/single_item.dart';
 import '../../models/product_model.dart';
 
@@ -77,7 +76,6 @@ class _SearchState extends State<Search> {
                 productPrice: data.productPrice,
                 productId: data.productId,
                 productQuantity: 0,
-                productUnit: const ProductUnit(),
                 onDelete: () {},
 
               );

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:raj_eat/repository/firebase_auth_service.dart';
 import 'package:raj_eat/singin/login_page.dart';
 import 'package:raj_eat/widgets/form_container_widget.dart';
@@ -154,7 +153,7 @@ class _SingUpDeliveryState extends State<SingUpDelivery> {
     String password = _passwordController.text;
 
     try {
-      await _auth.signUpWithEmailAndPassword(email, password, _role);
+      await _auth.signUpWithEmailAndPassword(username,email, password, _role);
       setState(() {
         isSigningUp = false;
       });

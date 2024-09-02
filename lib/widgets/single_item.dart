@@ -17,10 +17,9 @@ class SingleItem extends StatefulWidget {
   int productQuantity;
   Function onDelete;
   bool wishList = false;
-  var productUnit;
 
   SingleItem(
-      {super.key, this.isBool = false,required this.productUnit, required this.productPrice, required this.productImage, required this.productName, required this.productId, required this.productQuantity, required this.onDelete,this.wishList = false,}); // Define isBool parameter in the constructor
+      {super.key, this.isBool = false, required this.productPrice, required this.productImage, required this.productName, required this.productId, required this.productQuantity, required this.onDelete,this.wishList = false,}); // Define isBool parameter in the constructor
 
   @override
   _SingleItemState createState() => _SingleItemState();
@@ -81,67 +80,6 @@ class _SingleItemState extends State<SingleItem> {
                           ),
                         ],
                       ),
-                      widget.isBool == false
-                          ? GestureDetector(
-                        onTap: (){
-                          showModalBottomSheet(
-                              context: context,
-                              builder: (context) {
-                                return Column(
-                                  mainAxisSize: MainAxisSize.min,
-
-                                  children: <Widget>[
-
-                                    ListTile(
-                                      title: const Text('50 Gram '),
-                                      onTap: (){
-                                        Navigator.pop(context);
-                                      },
-                                    ),
-                                    ListTile(
-                                      title: const Text('500 Gram '),
-                                      onTap: (){
-                                        Navigator.pop(context);
-                                      },
-                                    ),
-                                    ListTile(
-                                      title: const Text('1kg '),
-                                      onTap: (){
-                                        Navigator.pop(context);
-                                      },
-                                    ),
-                                  ],
-
-                                );
-                              }
-                          );
-                        },
-                        child: Container(
-                          margin: const EdgeInsets.only(right: 15),
-                          padding: const EdgeInsets.symmetric(horizontal: 10),
-                          height: 35,
-                          decoration: BoxDecoration(
-                            border: Border.all(color: Colors.grey),
-                            borderRadius: BorderRadius.circular(30),
-                          ),
-                          child: Row(
-                            children: [
-                              const Expanded(child:Text(" Gram ",
-                                style: TextStyle(
-                                  color: Colors.grey,
-                                  fontSize: 14,
-
-                                ),
-                              ),
-                              ),
-                              Center(
-                                child: Icon(Icons.arrow_drop_down,size: 20,color: primaryColor,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ):Text(widget.productUnit)
                     ],
                   ),
                 ),
@@ -158,7 +96,6 @@ class _SingleItemState extends State<SingleItem> {
                     productImage: widget.productImage,
                     productName: widget.productName,
                     productPrice: widget.productPrice,
-                    productUnit: widget.productUnit,
 
                   )
                       :Padding(

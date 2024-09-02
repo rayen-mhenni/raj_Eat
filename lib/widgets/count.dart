@@ -2,7 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:raj_eat/providers/review_cart_provider.dart';
+import 'package:raj_eat/providers/cart_provider.dart';
+import 'package:raj_eat/screens/product_overview/product_overview.dart';
 
 import '../config/colors.dart';
 class Count extends StatefulWidget {
@@ -10,11 +11,9 @@ class Count extends StatefulWidget {
   final String productImage;
   final String productId;
   final int productPrice;
-  var productUnit;
 
   Count({super.key,
     required  this.productName,
-    required  this.productUnit,
     required  this.productId,
     required  this.productImage,
     required  this.productPrice,
@@ -26,7 +25,7 @@ class Count extends StatefulWidget {
 
 class _CountState extends State<Count> {
   int count = 1;
-  bool isTrue =false;
+  bool isTrue = false;
 
   getAddAndQuantity() {
     FirebaseFirestore.instance
@@ -55,7 +54,7 @@ class _CountState extends State<Count> {
   @override
   Widget build(BuildContext context) {
     getAddAndQuantity();
-    ReviewCartProvider reviewCartProvider = Provider.of(context);
+    CartProvider cartProvider = Provider.of(context);
     return Container(
         height: 30,
         width: 50,
@@ -69,24 +68,20 @@ class _CountState extends State<Count> {
           children: [
             InkWell(
               onTap: (){
-
-
                 if (count == 1){
                   setState(() {
                     isTrue = false;
                   });
-                  reviewCartProvider.reviewCartDataDelete(widget.productId);
+                  cartProvider.deleteProductInCart(productId: widget.productId);
                 }
 
-                else if (count > 1){setState(() {
+                else if (count > 1){
+                  setState(() {
                   count --;
                 });
-                reviewCartProvider.updateReviewCartData(
-                  cartId: widget.productId,
-                  cartImage: widget.productImage,
-                  cartName: widget.productName,
-                  cartPrice: widget.productPrice,
-                  cartQuantity: count,
+                cartProvider.updateProductInCart(
+                  productId: widget.productId,
+                  quantity: count,
 
                 );
                 }
@@ -105,12 +100,9 @@ class _CountState extends State<Count> {
                 setState(() {
                   count ++;
                 });
-                reviewCartProvider.updateReviewCartData(
-                  cartId: widget.productId,
-                  cartImage: widget.productImage,
-                  cartName: widget.productName,
-                  cartPrice: widget.productPrice,
-                  cartQuantity: count,
+                cartProvider.updateProductInCart(
+                  productId: widget.productId,
+                  quantity: count,
                 );
               },
               child:
@@ -122,18 +114,14 @@ class _CountState extends State<Count> {
         ):Center(
           child: InkWell(
             onTap: (){
-              setState(() {
-                isTrue = true;
-              });
-              reviewCartProvider.addReviewCartData(
-                cartId: widget.productId,
-                cartName: widget.productName,
-                cartImage: widget.productImage,
-                cartPrice: widget.productPrice,
-                cartQuantity: count,
-                cartUnit: widget.productUnit,
-
-              );
+              Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => ProductOverview(
+                  productId: widget.productId,
+                  productPrice: widget.productPrice.toInt(),
+                  productName: widget.productName,
+                  productImage: widget.productImage,
+                ),
+              ));
             },
             child: Text(
               "ADD",

@@ -1,27 +1,33 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+import 'cartProduct.dart';
+import 'delivery_address_model.dart';
+
 class OrderModel {
-  final String orderId;
+  final DocumentReference? reference;
   final String userId;
-  final String productId;
-  final List<String> selectedOptions; // Ajoutez ce champ si ce n'est pas déjà fait
+  final List<CartProduct> products;
+  final DeliveryAddressModel address;
+  final List<String> selectedOptions;
   final double totalPrice;
 
   OrderModel({
-    required this.orderId,
+    this.reference,
     required this.userId,
-    required this.productId,
+    required this.products,
+    required this.address,
     required this.selectedOptions,
     required this.totalPrice,
   });
 
-  factory OrderModel.fromMap(Map<String, dynamic> data, String userId) {
+  factory OrderModel.fromMap(Map<String, dynamic> data, String userName) {
     return OrderModel(
-      orderId: data['cartId'] ?? '',
-      userId: userId,
-      productId: data['productId'] ?? '',
+      reference: data['reference'],
+      userId: data['userId'],
+      address: data['address'],
+      products: List<CartProduct>.from(data['products'] ?? []),
       selectedOptions: List<String>.from(data['selectedOptions'] ?? []),
-      totalPrice: (data['cartPrice'] * data['cartQuantity']).toDouble(),
+      totalPrice: data['totalPrice'],
     );
   }
 }

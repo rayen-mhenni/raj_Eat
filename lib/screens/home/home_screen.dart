@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:raj_eat/providers/cart_provider.dart';
 import 'package:raj_eat/providers/product_provider.dart';
 import 'package:raj_eat/providers/review_cart_provider.dart';
 import 'package:raj_eat/providers/user_provider.dart';
@@ -177,9 +178,9 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     ProductProvider initproductProvider = Provider.of<ProductProvider>(context, listen: false);
-    initproductProvider.fatchPizzaProductData();
-    initproductProvider.fatchSandwichProductData();
-    initproductProvider.fatchMakloubProductData();
+    initproductProvider.fetchPizzaProductData();
+    initproductProvider.fetchSandwichProductData();
+    initproductProvider.fetchMakloubProductData();
   }
 
   @override
@@ -218,9 +219,9 @@ class _HomeScreenState extends State<HomeScreen> {
               onTap: () {
                 Navigator.of(context).push(
                   MaterialPageRoute(
-                    builder: (context) => Consumer<ReviewCartProvider>(
-                      builder: (context, reviewCartProvider, _) => ReviewCart(
-                        reviewCartProvider: reviewCartProvider,
+                    builder: (context) => Consumer<CartProvider>(
+                      builder: (context, cartProvider, _) => ReviewCart(
+                        cartProvider: cartProvider,
                       ),
                     ),
                   ),

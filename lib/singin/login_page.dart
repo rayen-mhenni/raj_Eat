@@ -231,7 +231,7 @@ class _SignInScreenState extends State<LoginPage> {
         } else {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => HomeScreen()),
+            MaterialPageRoute(builder: (context) => const HomeScreen()),
           );
         }
       }
@@ -287,7 +287,7 @@ class _SignInScreenState extends State<LoginPage> {
             else {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => HomeScreen()),
+                MaterialPageRoute(builder: (context) => const HomeScreen()),
               );
             }
           }

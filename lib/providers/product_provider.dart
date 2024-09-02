@@ -8,14 +8,13 @@ class ProductProvider with ChangeNotifier {
     productName: "",   // Empty string for name
     productPrice: 0,
     productId: "",
-    productQuantity:0,
-    productUnit: [],
+    productQuantity:0
 
   );
 
 
 
-  List<ProductModel>search=[];
+  List<ProductModel>search =[];
   productModels(QueryDocumentSnapshot element) {
 
     productModel = ProductModel(
@@ -24,14 +23,13 @@ class ProductProvider with ChangeNotifier {
       productPrice: element.get("productPrice"),
       productId: element.get("productId"),
       productQuantity: 0,
-      productUnit: element.get("productUnit"),
     );
     search.add(productModel);
   }
 
   List<ProductModel> pizzaProductList = [];
 
-  fatchPizzaProductData() async {
+  fetchPizzaProductData() async {
     List<ProductModel> newList = [];
     QuerySnapshot value =
     await FirebaseFirestore.instance.collection("PizzaProduct").get();
@@ -47,13 +45,10 @@ class ProductProvider with ChangeNotifier {
   List<ProductModel> get getPizzaProductDataList{
     return pizzaProductList;
   }
-
-
-
-
+  
   List<ProductModel> SandwichProductList = [];
 
-  fatchSandwichProductData() async {
+  fetchSandwichProductData() async {
     List<ProductModel> newList = [];
     QuerySnapshot value =
     await FirebaseFirestore.instance.collection("SandwichProduct").get();
@@ -70,14 +65,10 @@ class ProductProvider with ChangeNotifier {
   List<ProductModel> get getSandwichProductDataList{
     return SandwichProductList;
   }
-
-
-
-
-
+  
   List<ProductModel> MakloubProductList = [];
 
-  fatchMakloubProductData() async {
+  fetchMakloubProductData() async {
     List<ProductModel> newList = [];
     QuerySnapshot value =
     await FirebaseFirestore.instance.collection("MakloubProduct").get();
@@ -95,7 +86,9 @@ class ProductProvider with ChangeNotifier {
     return MakloubProductList;
   }
 
-
+  ProductModel? productById(String productId){
+    return search.firstWhere((ProductModel product) => product.productId == productId);
+  }
   List<ProductModel> get getAllProductSearch{
     return search;
 

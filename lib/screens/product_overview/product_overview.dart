@@ -3,10 +3,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:raj_eat/config/colors.dart';
+import 'package:raj_eat/providers/cart_provider.dart';
 import 'package:raj_eat/providers/review_cart_provider.dart';
 import 'package:raj_eat/providers/wishlist_provider.dart';
 import 'package:raj_eat/screens/review_cart/review_cart.dart';
-import 'package:raj_eat/widgets/count.dart';
 
 enum SinginCharacter { fill, outline }
 
@@ -17,19 +17,19 @@ class ProductOverview extends StatefulWidget {
   final String productId;
 
   const ProductOverview({
-    Key? key,
+    super.key,
     this.productImage = '',
     this.productName = '',
     this.productPrice = 0,
     this.productId = '',
-  }) : super(key: key);
+  });
 
   @override
   _ProductOverviewState createState() => _ProductOverviewState();
 }
 
 class _ProductOverviewState extends State<ProductOverview> {
-  SinginCharacter _character = SinginCharacter.fill;
+  final SinginCharacter _character = SinginCharacter.fill;
   Map<String, bool> selectedOptions = {
     'Salad Mechwiya': false,
     'Oignons': false,
@@ -42,15 +42,15 @@ class _ProductOverviewState extends State<ProductOverview> {
   @override
   void initState() {
     super.initState();
-    getWishtListBool();
+    getWishListBool();
   }
 
-  void getWishtListBool() {
+  void getWishListBool() {
     FirebaseFirestore.instance
         .collection("WishList")
         .doc(FirebaseAuth.instance.currentUser!.uid)
         .collection("YourWishList")
-        .doc(widget.productId)
+        .doc(widget.productName)
         .get()
         .then((value) {
       if (value.exists) {
@@ -61,7 +61,7 @@ class _ProductOverviewState extends State<ProductOverview> {
     });
   }
 
-  void updateProductOptions(String productId, Map<String, bool> selectedOptions) async {
+  void updateProductOptions(String productName, Map<String, bool> selectedOptions) async {
     List<String> selectedOptionsList = [];
     selectedOptions.forEach((option, isSelected) {
       if (isSelected) {
@@ -74,17 +74,19 @@ class _ProductOverviewState extends State<ProductOverview> {
         .collection("UserSelections")
         .doc(FirebaseAuth.instance.currentUser!.uid)
         .collection("Products")
-        .doc(productId)
+        .doc(productName)
         .set({
-      'productId': productId,
+      'productName': productName,
       'selectedOptions': selectedOptionsList,
     });
 
     // Mise à jour des statistiques des options et diminution du stock
-    await updateStockAndStatistics(productId, selectedOptionsList.length);
+    await updateStockAndStatistics(productName, selectedOptionsList.length);
   }
 
   Future<void> updateStockAndStatistics(String productId, int optionsCount) async {
+    print('ismail');
+    print(productId);
     DocumentReference productRef = FirebaseFirestore.instance.collection('Products').doc(productId);
 
     await FirebaseFirestore.instance.runTransaction((transaction) async {
@@ -185,7 +187,7 @@ class _ProductOverviewState extends State<ProductOverview> {
                     wishListQuantity: 2,
                   );
                 } else {
-                  wishListProvider.deleteWishtList(widget.productId);
+                  wishListProvider.deleteWishtList(widget.productName);
                 }
               }),
           bonntonNavigatorBar(
@@ -197,9 +199,9 @@ class _ProductOverviewState extends State<ProductOverview> {
               onTap: () {
                 Navigator.of(context).push(
                   MaterialPageRoute(
-                    builder: (context) => Consumer<ReviewCartProvider>(
-                      builder: (context, reviewCartProvider, _) => ReviewCart(
-                        reviewCartProvider: reviewCartProvider,
+                    builder: (context) => Consumer<CartProvider>(
+                      builder: (context, cartProvider, _) => ReviewCart(
+                        cartProvider: cartProvider,
                       ),
                     ),
                   ),
@@ -254,9 +256,9 @@ class _ProductOverviewState extends State<ProductOverview> {
                   ),
                   ElevatedButton(
                     onPressed: () {
-                      updateProductOptions(widget.productId, selectedOptions);
+                      updateProductOptions(widget.productName, selectedOptions);
                     },
-                    child: Text("Update Options"),
+                    child: const Text("Update Options"),
                   ),
                 ],
               ),

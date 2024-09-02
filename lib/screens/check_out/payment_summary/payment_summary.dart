@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:raj_eat/config/colors.dart';
 import 'package:raj_eat/models/delivery_address_model.dart';
 import 'package:raj_eat/providers/review_cart_provider.dart';
 import 'package:raj_eat/screens/check_out/delivery_details/single_delivery_item.dart';
-import 'package:provider/provider.dart';
 import 'package:raj_eat/screens/check_out/payment_summary/my_google_pay.dart';
 import 'package:raj_eat/screens/check_out/payment_summary/order_item.dart';
 
@@ -28,12 +28,12 @@ class _PaymentSummaryState extends State<PaymentSummary> {
   Widget build(BuildContext context) {
     ReviewCartProvider reviewCartProvider = Provider.of(context);
     reviewCartProvider.getReviewCartData();
-
     double discount = 30;
     double discountValue = 0;
     double shippingCharge = 3.7;
 
     double totalPrice = reviewCartProvider.getTotalPrice();
+    print(totalPrice);
     double total = totalPrice;
     if (totalPrice > 300) {
       discountValue = (totalPrice * discount) / 100;
@@ -45,11 +45,11 @@ class _PaymentSummaryState extends State<PaymentSummary> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: Text("Order Confirmation"),
-            content: Text("Your order has been placed successfully."),
+            title: const Text("Order Confirmation"),
+            content: const Text("Your order has been placed successfully."),
             actions: <Widget>[
               TextButton(
-                child: Text("OK"),
+                child: const Text("OK"),
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
@@ -110,18 +110,9 @@ class _PaymentSummaryState extends State<PaymentSummary> {
             return Column(
               children: [
                 SingleDeliveryItem(
-                  address:
-                  "Area, ${widget.deliverAddressList.aera}, Street, ${widget.deliverAddressList.street}, Society ${widget.deliverAddressList.scoirty}, Pincode ${widget.deliverAddressList.pinCode}",
-                  title:
-                  "${widget.deliverAddressList.firstName} ${widget.deliverAddressList.lastName}",
-                  number: widget.deliverAddressList.mobileNo,
-                  addressType: widget.deliverAddressList.addressType ==
-                      "AddressTypes.Home"
-                      ? "Home"
-                      : widget.deliverAddressList.addressType ==
-                      "AddressTypes.Other"
-                      ? "Other"
-                      : "Work",
+                  deliveryAddressModel: widget.deliverAddressList,
+                  isSelected: false,
+                  onTap: () {},
                 ),
                 const Divider(),
                 ExpansionTile(
@@ -156,26 +147,25 @@ class _PaymentSummaryState extends State<PaymentSummary> {
                     style: TextStyle(color: Colors.grey[600]),
                   ),
                   trailing: Text(
-                    "D$discountValue",
+                    "D$shippingCharge",
                     style: const TextStyle(
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                ),
+                ), discountValue > 0 ?
                 ListTile(
                   minVerticalPadding: 5,
                   leading: Text(
                     "Compen Discount",
                     style: TextStyle(color: Colors.grey[600]),
                   ),
-                  trailing: const Text(
-                    "D10",
-                    style: TextStyle(
+                  trailing: Text(
+                    "D{$discountValue}",
+                    style: const TextStyle(
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                ),
-                const Divider(),
+                ): const Divider(),
                 const ListTile(
                   leading: Text("Payment Options"),
                 ),
@@ -189,7 +179,7 @@ class _PaymentSummaryState extends State<PaymentSummary> {
                     });
                   },
                   secondary: Icon(
-                    Icons.work,
+                    Icons.home,
                     color: primaryColor,
                   ),
                 ),
@@ -203,7 +193,7 @@ class _PaymentSummaryState extends State<PaymentSummary> {
                     });
                   },
                   secondary: Icon(
-                    Icons.devices_other,
+                    Icons.payment,
                     color: primaryColor,
                   ),
                 ),

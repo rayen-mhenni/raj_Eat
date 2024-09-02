@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:raj_eat/models/order_model.dart';
 
 class AdminOrdersPage extends StatelessWidget {
+  const AdminOrdersPage({super.key});
+
 
   static Future<List<OrderModel>> getOrders() async {
     List<OrderModel> orders = [];
@@ -25,7 +27,7 @@ class AdminOrdersPage extends StatelessWidget {
     print( getOrders());
     return Scaffold(
       appBar: AppBar(
-        title: Text('Admin Orders Page'),
+        title: const Text('Admin Orders Page'),
       ),
       body: FutureBuilder<List<OrderModel>>(
         future: getOrders(),
@@ -43,13 +45,13 @@ class AdminOrdersPage extends StatelessWidget {
             itemBuilder: (context, index) {
               OrderModel order = orders[index];
               return ListTile(
-                  title: Text('Order ID: ${order.orderId}'),
+                  title: Text('Order ID: ${order.reference}'),
                   subtitle: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('User ID: ${order.userId}'),
-                    Text('Product ID: ${order.productId}'),
-                    Text('Selected Options: ${order.selectedOptions.join(', ')}'),
+                    Text('userName: ${order.userId}'),
+                    Text('product id: ${order.products.first.productId}'),
+                    Text('Selected Options: ${order.selectedOptions}'),
                     Text('Total Price: \$${order.totalPrice}'),
                     ],
                   )

@@ -3,14 +3,10 @@ import 'package:provider/provider.dart';
 import 'package:raj_eat/providers/product_provider.dart';
 import 'package:raj_eat/providers/user_provider.dart';
 import 'package:raj_eat/screens/admin_order/admin_order.dart';
-import 'package:raj_eat/screens/home/singal_product.dart';
 import 'package:raj_eat/config/colors.dart';
-import 'package:raj_eat/screens/product_overview/product_overview.dart';
 import 'package:raj_eat/screens/reservation/admin_reservation_page.dart';
 import 'package:raj_eat/screens/stock/option_satistics.dart';
 import 'package:raj_eat/singup/sing_up_delivery.dart';
-import '../search/search.dart';
-import 'drawer_side.dart';
 
 class AdminScreen extends StatefulWidget {
   const AdminScreen({super.key});
@@ -53,7 +49,7 @@ class _AdminScreenState extends State<AdminScreen> {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => AdminOrdersPage()),
+                  MaterialPageRoute(builder: (context) => const AdminOrdersPage()),
                 );
               },
               child: const Text('Review Orders'),
@@ -62,7 +58,7 @@ class _AdminScreenState extends State<AdminScreen> {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => AdminReservationsPage()),
+                  MaterialPageRoute(builder: (context) => const AdminReservationsPage()),
                 );
               },
               child: const Text('Reservations'),

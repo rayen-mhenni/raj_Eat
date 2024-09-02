@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:raj_eat/config/colors.dart';
+import 'package:raj_eat/providers/cart_provider.dart';
 import 'package:raj_eat/providers/review_cart_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:raj_eat/providers/user_provider.dart';
@@ -98,9 +99,9 @@ class _DrawerSideState extends State<DrawerSide> {
               onTap: () {
                 Navigator.of(context).push(
                   MaterialPageRoute(
-                    builder: (context) => Consumer<ReviewCartProvider>(
-                      builder: (context, reviewCartProvider, _) => ReviewCart(
-                        reviewCartProvider: reviewCartProvider,
+                    builder: (context) => Consumer<CartProvider>(
+                      builder: (context, cartProvider, _) => ReviewCart(
+                        cartProvider: cartProvider,
                       ),
                     ),
                   ),
@@ -113,7 +114,7 @@ class _DrawerSideState extends State<DrawerSide> {
             } ),
             listTile(iconData: Icons.notifications_outlined,title: "notification",
                 onTap:(){
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => NotificationsPage()),);
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => const NotificationsPage()),);
                 }),
 
             listTile(

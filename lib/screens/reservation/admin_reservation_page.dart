@@ -2,60 +2,79 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class AdminReservationsPage extends StatefulWidget {
+  const AdminReservationsPage({super.key});
+
   @override
   _AdminReservationsPageState createState() => _AdminReservationsPageState();
 }
 
 class _AdminReservationsPageState extends State<AdminReservationsPage> {
-  // Fonction pour récupérer toutes les réservations
+  // Function to fetch all reservations
   Future<List<Map<String, dynamic>>> _fetchAllReservations() async {
-    final snapshot = await FirebaseFirestore.instance.collection('TableReservations').get();
-    List<Map<String, dynamic>> reservations = [];
-    for (var doc in snapshot.docs) {
-      reservations.add({
-        ...doc.data(),
-        'id': doc.id, // Ajout de l'identifiant du document pour les mises à jour
-      });
+    try {
+      final snapshot = await FirebaseFirestore.instance.collection('TableReservations').get();
+      List<Map<String, dynamic>> reservations = [];
+      for (var doc in snapshot.docs) {
+        reservations.add({
+          ...doc.data(),
+          'id': doc.id, // Add the document ID for updates
+        });
+      }
+      return reservations;
+    } catch (e) {
+      print("Error fetching reservations: $e");
+      return [];
     }
-    return reservations;
   }
 
-  // Fonction pour envoyer une notification à l'utilisateur
-  Future<void> _sendNotification(String userId, String message) async {
-    await FirebaseFirestore.instance.collection('Notifications').add({
-      'userId': userId,
-      'message': message,
-      'timestamp': FieldValue.serverTimestamp(),
-    });
+  // Function to send a notification to the user with reservation details
+  Future<void> _sendNotification(String userId, String message, Map<String, dynamic> reservationDetails) async {
+    try {
+      await FirebaseFirestore.instance.collection('Notifications').add({
+        'userId': userId,
+        'message': message,
+        'timestamp': FieldValue.serverTimestamp(),
+        ...reservationDetails, // Include reservation details in the notification
+      });
+    } catch (e) {
+      print("Error sending notification: $e");
+    }
   }
 
-  // Fonction pour mettre à jour le statut de la réservation et envoyer une notification
-  Future<void> _updateReservationStatus(String reservationId, bool isAccepted, String userId) async {
-    await FirebaseFirestore.instance.collection('TableReservations').doc(reservationId).update({
-      'status': isAccepted ? 'accepted' : 'rejected',
-    });
+  // Function to update the reservation status and send a notification
+  Future<void> _updateReservationStatus(String reservationId, bool isAccepted, Map<String, dynamic> reservation) async {
+    try {
+      await FirebaseFirestore.instance.collection('TableReservations').doc(reservationId).update({
+        'status': isAccepted ? 'accepted' : 'rejected',
+      });
 
-    String message = isAccepted
-        ? 'Your table reservation has been accepted.'
-        : 'Your table reservation has been rejected.';
-    await _sendNotification(userId, message);
+      String message = isAccepted
+          ? 'Your table reservation has been accepted.'
+          : 'Your table reservation has been rejected.';
+
+      reservation['status'] = isAccepted ? 'accepted' : 'rejected';
+
+      await _sendNotification(reservation['userId'], message, reservation);
+    } catch (e) {
+      print("Error updating reservation status or sending notification: $e");
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Admin Reservations Page'),
+        title: const Text('Admin Reservations Page'),
       ),
       body: FutureBuilder<List<Map<String, dynamic>>>(
         future: _fetchAllReservations(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError) {
             return Center(child: Text('Error: ${snapshot.error}'));
           } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return Center(child: Text('No reservations found.'));
+            return const Center(child: Text('No reservations found.'));
           } else {
             final reservations = snapshot.data!;
             return ListView.builder(
@@ -75,24 +94,24 @@ class _AdminReservationsPageState extends State<AdminReservationsPage> {
                         children: [
                           ElevatedButton(
                             onPressed: () async {
-                              await _updateReservationStatus(reservation['id'], true, reservation['userId']);
+                              await _updateReservationStatus(reservation['id'], true, reservation);
                               ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(content: Text('Reservation accepted and user notified')),
+                                const SnackBar(content: Text('Reservation accepted and user notified')),
                               );
-                              setState(() {});
+                              setState(() {}); // Refresh the UI to show the updated status
                             },
-                            child: Text('Accept'),
+                            child: const Text('Accept'),
                           ),
-                          SizedBox(width: 8), // Ajouter de l'espace entre les boutons
+                          const SizedBox(width: 8), // Add space between buttons
                           ElevatedButton(
                             onPressed: () async {
-                              await _updateReservationStatus(reservation['id'], false, reservation['userId']);
+                              await _updateReservationStatus(reservation['id'], false, reservation);
                               ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(content: Text('Reservation rejected and user notified')),
+                                const SnackBar(content: Text('Reservation rejected and user notified')),
                               );
-                              setState(() {});
+                              setState(() {}); // Refresh the UI to show the updated status
                             },
-                            child: Text('Reject'),
+                            child: const Text('Reject'),
                           ),
                         ],
                       ),

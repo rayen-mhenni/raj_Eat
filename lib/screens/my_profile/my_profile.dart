@@ -145,7 +145,7 @@ class _MyProfileState extends State<MyProfile> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => MyOrder(),// Passez le UserProvider ici si nécessaire
+                            builder: (context) => const MyOrder(),// Passez le UserProvider ici si nécessaire
 
                           ),
                         );
@@ -165,7 +165,7 @@ class _MyProfileState extends State<MyProfile> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => TableReservationPage(),
+                            builder: (context) => const TableReservationPage(),
                           ),
                         );
                       },

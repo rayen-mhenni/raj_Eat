@@ -1,7 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class TableReservationPage extends StatefulWidget {
+  const TableReservationPage({super.key});
+
   @override
   _TableReservationPageState createState() => _TableReservationPageState();
 }
@@ -24,21 +27,24 @@ class _TableReservationPageState extends State<TableReservationPage> {
 
   Future<void> _submitReservation() async {
     if (_formKey.currentState!.validate()) {
+      final user = FirebaseAuth.instance.currentUser;
       await FirebaseFirestore.instance.collection('TableReservations').add({
         'name': _nameController.text,
         'date': _dateController.text,
         'time': _timeController.text,
         'people': int.parse(_peopleController.text),
         'status': 'pending',  // Initial status is 'pending'
+        'userId': user?.uid,  // Store the current user's ID
       });
 
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Reservation submitted for approval!')),
+        const SnackBar(content: Text('Reservation submitted for approval!')),
       );
 
       _formKey.currentState!.reset();
     }
   }
+
 
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
@@ -70,7 +76,7 @@ class _TableReservationPageState extends State<TableReservationPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Reserve a Table'),
+        title: const Text('Reserve a Table'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -80,7 +86,7 @@ class _TableReservationPageState extends State<TableReservationPage> {
             children: [
               TextFormField(
                 controller: _nameController,
-                decoration: InputDecoration(labelText: 'Name'),
+                decoration: const InputDecoration(labelText: 'Name'),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Please enter your name';
@@ -94,7 +100,7 @@ class _TableReservationPageState extends State<TableReservationPage> {
                 decoration: InputDecoration(
                   labelText: 'Date',
                   suffixIcon: IconButton(
-                    icon: Icon(Icons.calendar_today),
+                    icon: const Icon(Icons.calendar_today),
                     onPressed: () => _selectDate(context),
                   ),
                 ),
@@ -111,7 +117,7 @@ class _TableReservationPageState extends State<TableReservationPage> {
                 decoration: InputDecoration(
                   labelText: 'Time',
                   suffixIcon: IconButton(
-                    icon: Icon(Icons.access_time),
+                    icon: const Icon(Icons.access_time),
                     onPressed: () => _selectTime(context),
                   ),
                 ),
@@ -124,7 +130,7 @@ class _TableReservationPageState extends State<TableReservationPage> {
               ),
               TextFormField(
                 controller: _peopleController,
-                decoration: InputDecoration(labelText: 'Number of People'),
+                decoration: const InputDecoration(labelText: 'Number of People'),
                 keyboardType: TextInputType.number,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
@@ -133,10 +139,10 @@ class _TableReservationPageState extends State<TableReservationPage> {
                   return null;
                 },
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: _submitReservation,
-                child: Text('Reserve'),
+                child: const Text('Reserve'),
               ),
             ],
           ),

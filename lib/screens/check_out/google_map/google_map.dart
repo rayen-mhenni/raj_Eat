@@ -16,7 +16,7 @@ class CostomGoogleMap extends StatefulWidget {
 
 class _GoogleMapState extends State<CostomGoogleMap> {
   final Completer<GoogleMapController> _mapController = Completer<GoogleMapController>();
-  Set<Marker> _markers = {};
+  final Set<Marker> _markers = {};
 
   static const LatLng _initialcameraposition = LatLng(36.8065, 10.1815);
 
@@ -28,13 +28,13 @@ class _GoogleMapState extends State<CostomGoogleMap> {
     _location.onLocationChanged.listen((event) {
       controller.animateCamera(
         CameraUpdate.newCameraPosition(
-          CameraPosition(target: _initialcameraposition, zoom: 13),
+          const CameraPosition(target: _initialcameraposition, zoom: 13),
         ),
       );
     });
   }
 
-  LatLng? _currentP = null;
+  LatLng? _currentP;
 
   @override
   void initState() {
@@ -58,12 +58,12 @@ class _GoogleMapState extends State<CostomGoogleMap> {
               )
                   : GoogleMap(
                 onMapCreated: _onMapCreated,
-                initialCameraPosition: CameraPosition(
+                initialCameraPosition: const CameraPosition(
                   target: _initialcameraposition,
                   zoom: 11.0,
                 ),
                 onTap: (LatLng latLng) {
-                  _markers.add(Marker(markerId: MarkerId('mark'), position: latLng));
+                  _markers.add(Marker(markerId: const MarkerId('mark'), position: latLng));
                   setState(() {});
                 },
                 markers: Set<Marker>.of(_markers),
@@ -82,7 +82,7 @@ class _GoogleMapState extends State<CostomGoogleMap> {
                     onPressed: () async {
                       await _location.getLocation().then((value) {
                         setState(() {
-                          checkoutProvider.setLoaction = value;
+                          checkoutProvider.updateLocation(value);
                         });
                       });
                       Navigator.of(context).pop();
@@ -102,30 +102,30 @@ class _GoogleMapState extends State<CostomGoogleMap> {
 
  Future<void> _cameraToPosition(LatLng pos) async {
     final GoogleMapController controller = await _mapController.future;
-    CameraPosition _newCameraPosition = CameraPosition(
+    CameraPosition newCameraPosition = CameraPosition(
       target: pos,
 
     );
     await controller.animateCamera(
-      CameraUpdate.newCameraPosition(_newCameraPosition),
+      CameraUpdate.newCameraPosition(newCameraPosition),
     );
   }
 
   Future<void> getLocationUpdates() async {
-    bool _serviceEnabled;
-    PermissionStatus _permissionGranted;
+    bool serviceEnabled;
+    PermissionStatus permissionGranted;
 
-    _serviceEnabled = await _location.serviceEnabled();
-    if (!_serviceEnabled) {
-      _serviceEnabled = await _location.requestService();
-      if (!_serviceEnabled) {
+    serviceEnabled = await _location.serviceEnabled();
+    if (!serviceEnabled) {
+      serviceEnabled = await _location.requestService();
+      if (!serviceEnabled) {
         return;
       }
     }
-    _permissionGranted = await _location.hasPermission();
-    if (_permissionGranted == PermissionStatus.denied) {
-      _permissionGranted = await _location.requestPermission();
-      if (_permissionGranted != PermissionStatus.granted) {
+    permissionGranted = await _location.hasPermission();
+    if (permissionGranted == PermissionStatus.denied) {
+      permissionGranted = await _location.requestPermission();
+      if (permissionGranted != PermissionStatus.granted) {
         return;
       }
     }

@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 class OptionStatisticsPage extends StatefulWidget {
   final String productId;
 
-  const OptionStatisticsPage({Key? key, required this.productId}) : super(key: key);
+  const OptionStatisticsPage({super.key, required this.productId});
 
   @override
   _OptionStatisticsPageState createState() => _OptionStatisticsPageState();
@@ -46,10 +46,10 @@ class _OptionStatisticsPageState extends State<OptionStatisticsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Option Statistics'),
+        title: const Text('Option Statistics'),
       ),
       body: optionStats.isEmpty
-          ? Center(child: Text('No statistics available.'))
+          ? const Center(child: Text('No statistics available.'))
           : ListView(
         children: optionStats.entries.map((entry) {
           return ListTile(

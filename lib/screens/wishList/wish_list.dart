@@ -3,7 +3,6 @@ import 'package:raj_eat/config/colors.dart';
 import 'package:raj_eat/models/product_model.dart';
 import 'package:raj_eat/providers/wishlist_provider.dart';
 import 'package:provider/provider.dart';
-import 'package:raj_eat/widgets/product_unit.dart';
 import 'package:raj_eat/widgets/single_item.dart';
 
 class WishLsit extends StatefulWidget {
@@ -88,7 +87,6 @@ class _WishLsitState extends State<WishLsit> {
                     productPrice: data.productPrice,
                     productId: data.productId,
                     productQuantity: data.productQuantity,
-                    productUnit: const ProductUnit(),
                     onDelete: () {
                       showAlertDialog(context, data);
                     },

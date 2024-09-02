@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import 'package:raj_eat/models/review_cart_model.dart';
 import 'package:raj_eat/providers/review_cart_provider.dart';
-import 'package:raj_eat/screens/check_out/delivery_details/delivery_details.dart';
 import '../../config/colors.dart';
 import '../../widgets/single_item.dart';
 
@@ -49,7 +47,7 @@ class MyOrder extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      bottomNavigationBar: SizedBox(
+      bottomNavigationBar: const SizedBox(
         height: 0, // Set height to 0 or remove this widget if you don't want any BottomAppBar
       ),
       appBar: AppBar(
@@ -82,7 +80,6 @@ class MyOrder extends StatelessWidget {
                     productName: data.cartName,
                     productId: data.cartId,
                     productQuantity: data.cartQuantity,
-                    productUnit: data.cartUnit,
                     onDelete: () {
                       showAlertDialog(context, data);
                     },

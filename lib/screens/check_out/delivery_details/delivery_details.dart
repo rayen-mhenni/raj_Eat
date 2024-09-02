@@ -1,11 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:raj_eat/config/colors.dart';
-
-
-
-
-
 import 'package:provider/provider.dart';
+import 'package:raj_eat/config/colors.dart';
 import 'package:raj_eat/models/delivery_address_model.dart';
 import 'package:raj_eat/providers/check_out_provider.dart';
 import 'package:raj_eat/screens/check_out/add_delivery_address/add_delivery_address.dart';
@@ -20,96 +15,98 @@ class DeliveryDetails extends StatefulWidget {
 }
 
 class _DeliveryDetailsState extends State<DeliveryDetails> {
-  late DeliveryAddressModel value;
+  DeliveryAddressModel? selectedValue;
+
+  @override
+  void initState() {
+    super.initState();
+    final deliveryAddressProvider = Provider.of<CheckoutProvider>(context, listen: false);
+    deliveryAddressProvider.getDeliveryAddressData();
+  }
+
   @override
   Widget build(BuildContext context) {
-    CheckoutProvider deliveryAddressProvider = Provider.of(context);
-    deliveryAddressProvider.getDeliveryAddressData();
+    final deliveryAddressProvider = Provider.of<CheckoutProvider>(context);
+
     return Scaffold(
-        appBar: AppBar(
-          title: const Text("Delivery Details"),
-        ),
-
-        floatingActionButton: FloatingActionButton(
-          backgroundColor: primaryColor,
-          child: const Icon(Icons.add),
-          onPressed: () {
-         Navigator.of(context).push(
-         MaterialPageRoute(
-         builder: (context) => const AddDeliverAddress(
-
-    ),
-    ),
-    );
-          },
-        ),
-    bottomNavigationBar: Container(
-    height: 48,
-    margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-    child: MaterialButton(
-      onPressed: () {
-        deliveryAddressProvider.getDeliveryAddressList.isEmpty
-            ? Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (context) => const AddDeliverAddress(),
-          ),
-        )
-            : Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (context) => PaymentSummary(
-              deliverAddressList: value,
+      appBar: AppBar(
+        title: const Text("Delivery Details"),
+      ),
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: primaryColor,
+        child: const Icon(Icons.maps_home_work),
+        onPressed: () {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => const AddDeliverAddress(),
             ),
+          );
+        },
+
+      ),
+      bottomNavigationBar: Container(
+        height: 48,
+        margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+        child: MaterialButton(
+          onPressed: () {
+            if (selectedValue == null) {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => const AddDeliverAddress(),
+                ),
+              );
+            } else {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => PaymentSummary(
+                    deliverAddressList: selectedValue!,
+                  ),
+                ),
+              );
+            }
+          },
+          color: primaryColor,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(30),
           ),
-        );
-      },
-      color: primaryColor,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(
-          30,
+          child: Text(
+            selectedValue == null ? "Add new Address" : "Payment Summary",
+            style: const TextStyle(color: Colors.white),
+          ),
         ),
       ),
-      child: deliveryAddressProvider.getDeliveryAddressList.isEmpty
-          ? const Text("Add new Address")
-          : const Text("Payment Summary"),
-    ),
-    ),
-    body: ListView(
+      body: ListView(
         children: [
           const ListTile(
             title: Text("Deliver To"),
           ),
-          const Divider(
-            height: 1,
-          ),
-          deliveryAddressProvider.getDeliveryAddressList.isEmpty
+          const Divider(height: 1),
+          deliveryAddressProvider.deliveryAddressList.isEmpty
               ? Center(
             child: Container(
               child: const Center(
-                child: Text("No Data"),
+                child: Text("Please, add a new address"),
               ),
             ),
           )
               : Column(
-              children:deliveryAddressProvider.getDeliveryAddressList
-        .map<Widget>((e) {
-    setState(() {
-    value  = e;
-    });
-    return SingleDeliveryItem(
-      address:
-      "aera, ${e.aera}, street, ${e.street}, society ${e.scoirty}, pincode ${e.pinCode}",
-      title: "${e.firstName} ${e.lastName}",
-      number: e.mobileNo,
-      addressType: e.addressType == "AddressTypes.Home"
-          ? "Home"
-          : e.addressType == "AddressTypes.Other"
-          ? "Other"
-          : "Work",
-    );
-              }).toList(),
-          )
+            children: deliveryAddressProvider.deliveryAddressList
+                .map<Widget>((e) {
+              return SingleDeliveryItem(
+                deliveryAddressModel: e,
+                isSelected: selectedValue == e,
+                onTap: () {
+                  setState(() {
+                    selectedValue = e;
+                  });
+                },
+              );
+            }).toList(),
+          ),
         ],
-    ),
+      ),
     );
   }
-  }
+}
+
+
