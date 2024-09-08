@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
@@ -64,12 +65,21 @@ class _SingleItemState extends State<SingleItem> {
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(widget.productName,
-                            style: TextStyle(
-                                color: textColor,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16
-                            ),
+                          Row(
+                            children: [
+                              Expanded(
+                                child: AutoSizeText(widget.productName,
+                                  maxLines: 2,
+                                  minFontSize: 6,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                      color: textColor,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 16
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                           Text("${widget.productPrice}d" ,
                             style: TextStyle(
@@ -141,7 +151,7 @@ class _SingleItemState extends State<SingleItem> {
                             ],
                           ),
                         ),
-                      ):Text(widget.productUnit)
+                      ):Text(widget.productUnit ?? "")
                     ],
                   ),
                 ),
