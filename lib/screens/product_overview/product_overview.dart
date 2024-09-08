@@ -61,7 +61,7 @@ class _ProductOverviewState extends State<ProductOverview> {
     });
   }
 
-  void updateProductOptions(String productId, Map<String, bool> selectedOptions) async {
+  void updateProductOptions(String productId, Map<String, bool> selectedOptions, ReviewCartProvider reviewCartProvider) async {
     List<String> selectedOptionsList = [];
     selectedOptions.forEach((option, isSelected) {
       if (isSelected) {
@@ -80,12 +80,22 @@ class _ProductOverviewState extends State<ProductOverview> {
       'selectedOptions': selectedOptionsList,
     });
 
+
+    reviewCartProvider.addReviewCartData(
+        cartId: widget.productId,
+        cartName: widget.productName,
+        cartImage: widget.productImage,
+        cartPrice: widget.productPrice,
+        cartQuantity: 1
+    );
+
     // Mise à jour des statistiques des options et diminution du stock
     await updateStockAndStatistics(productId, selectedOptionsList.length);
   }
 
   Future<void> updateStockAndStatistics(String productId, int optionsCount) async {
-    DocumentReference productRef = FirebaseFirestore.instance.collection('Products').doc(productId);
+    DocumentReference productRef = FirebaseFirestore.instance.collection("UserSelections")
+        .doc(FirebaseAuth.instance.currentUser!.uid).collection('Products').doc(productId);
 
     await FirebaseFirestore.instance.runTransaction((transaction) async {
       DocumentSnapshot snapshot = await transaction.get(productRef);
@@ -94,7 +104,7 @@ class _ProductOverviewState extends State<ProductOverview> {
         throw Exception("Product does not exist!");
       }
 
-      int currentStock = snapshot['stock'];
+      /*int currentStock = snapshot['stock'];
       if (currentStock < optionsCount) {
         throw Exception("Not enough stock!");
       }
@@ -113,7 +123,7 @@ class _ProductOverviewState extends State<ProductOverview> {
         }
       }
 
-      transaction.set(statsRef, statsData);
+      transaction.set(statsRef, statsData);*/
     });
   }
 
@@ -156,114 +166,117 @@ class _ProductOverviewState extends State<ProductOverview> {
   @override
   Widget build(BuildContext context) {
     WishListProvider wishListProvider = Provider.of<WishListProvider>(context);
-    return Scaffold(
-      appBar: AppBar(
-        iconTheme: IconThemeData(color: textColor),
-        title: Text(
-          "Product Overview",
-          style: TextStyle(color: textColor),
-        ),
-      ),
-      bottomNavigationBar: Row(
-        children: [
-          bonntonNavigatorBar(
-              backgroundColor: textColor,
-              color: Colors.white70,
-              iconColor: Colors.grey,
-              title: "Add To WishList",
-              iconData: wishListBool ? Icons.favorite : Icons.favorite_outline,
-              onTap: () {
-                setState(() {
-                  wishListBool = !wishListBool;
-                });
-                if (wishListBool) {
-                  wishListProvider.addWishListData(
-                    wishListId: widget.productId,
-                    wishListImage: widget.productImage,
-                    wishListName: widget.productName,
-                    wishListPrice: widget.productPrice,
-                    wishListQuantity: 2,
-                  );
-                } else {
-                  wishListProvider.deleteWishtList(widget.productId);
-                }
-              }),
-          bonntonNavigatorBar(
-              backgroundColor: primaryColor,
-              color: textColor,
-              iconColor: Colors.white70,
-              title: "Go To Cart",
-              iconData: Icons.shop_outlined,
-              onTap: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => Consumer<ReviewCartProvider>(
-                      builder: (context, reviewCartProvider, _) => ReviewCart(
-                        reviewCartProvider: reviewCartProvider,
-                      ),
-                    ),
-                  ),
-                );
-              }),
-        ],
-      ),
-      body: Column(
-        children: [
-          Expanded(
-            flex: 2,
-            child: SizedBox(
-              width: double.infinity,
-              child: Column(
-                children: [
-                  ListTile(
-                    title: Text(widget.productName),
-                    subtitle: Text("\$${widget.productPrice}"),
-                  ),
-                  Container(
-                      height: 250,
-                      padding: const EdgeInsets.all(40),
-                      child: Image.network(
-                        widget.productImage,
-                      )),
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                    width: double.infinity,
-                    child: Text(
-                      "Available Options",
-                      textAlign: TextAlign.start,
-                      style: TextStyle(
-                        color: textColor,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ),
-                  Expanded(
-                    child: ListView(
-                      children: selectedOptions.keys.map((option) {
-                        return CheckboxListTile(
-                          title: Text(option),
-                          value: selectedOptions[option],
-                          onChanged: (bool? value) {
-                            setState(() {
-                              selectedOptions[option] = value ?? false;
-                            });
-                          },
-                        );
-                      }).toList(),
-                    ),
-                  ),
-                  ElevatedButton(
-                    onPressed: () {
-                      updateProductOptions(widget.productId, selectedOptions);
-                    },
-                    child: Text("Update Options"),
-                  ),
-                ],
+    return Consumer<ReviewCartProvider>(
+        builder: (context, reviewCartProvider, _) {
+          return Scaffold(
+            appBar: AppBar(
+              iconTheme: IconThemeData(color: textColor),
+              title: Text(
+                "Product Overview",
+                style: TextStyle(color: textColor),
               ),
             ),
-          ),
-        ],
-      ),
+
+            bottomNavigationBar: Row(
+              children: [
+                bonntonNavigatorBar(
+                    backgroundColor: textColor,
+                    color: Colors.white70,
+                    iconColor: Colors.grey,
+                    title: "Add To WishList",
+                    iconData: wishListBool ? Icons.favorite : Icons.favorite_outline,
+                    onTap: () {
+                      setState(() {
+                        wishListBool = !wishListBool;
+                      });
+                      if (wishListBool) {
+                        wishListProvider.addWishListData(
+                          wishListId: widget.productId,
+                          wishListImage: widget.productImage,
+                          wishListName: widget.productName,
+                          wishListPrice: widget.productPrice,
+                          wishListQuantity: 2,
+                        );
+                      } else {
+                        wishListProvider.deleteWishtList(widget.productId);
+                      }
+                    }),
+                bonntonNavigatorBar(
+                    backgroundColor: primaryColor,
+                    color: textColor,
+                    iconColor: Colors.white70,
+                    title: "Go To Cart",
+                    iconData: Icons.shop_outlined,
+                    onTap: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => ReviewCart(
+                            reviewCartProvider: reviewCartProvider,
+                          ),
+                        ),
+                      );
+                    }),
+              ],
+            ),
+            body: Column(
+              children: [
+                Expanded(
+                  flex: 2,
+                  child: SizedBox(
+                    width: double.infinity,
+                    child: Column(
+                      children: [
+                        ListTile(
+                          title: Text(widget.productName),
+                          subtitle: Text("\$${widget.productPrice}"),
+                        ),
+                        Container(
+                            height: 250,
+                            padding: const EdgeInsets.all(40),
+                            child: Image.network(
+                              widget.productImage,
+                            )),
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 20),
+                          width: double.infinity,
+                          child: Text(
+                            "Available Options",
+                            textAlign: TextAlign.start,
+                            style: TextStyle(
+                              color: textColor,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ),
+                        Expanded(
+                          child: ListView(
+                            children: selectedOptions.keys.map((option) {
+                              return CheckboxListTile(
+                                title: Text(option),
+                                value: selectedOptions[option],
+                                onChanged: (bool? value) {
+                                  setState(() {
+                                    selectedOptions[option] = value ?? false;
+                                  });
+                                },
+                              );
+                            }).toList(),
+                          ),
+                        ),
+                        ElevatedButton(
+                          onPressed: () {
+                            updateProductOptions(widget.productId, selectedOptions, reviewCartProvider);
+                          },
+                          child: Text("Update Options"),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          );
+        }
     );
   }
 }
