@@ -92,13 +92,13 @@ class CheckoutProvider with ChangeNotifier {
         firstName: db.get("firstname"),
         lastName: db.get("lastname"),
         addressType: db.get("addressType"),
-        aera: db.get("aera"),
+        area: db.get("aera"),
         alternateMobileNo: db.get("alternateMobileNo"),
         city: db.get("city"),
         landMark: db.get("landmark"),
         mobileNo: db.get("mobileNo"),
         pinCode: db.get("pincode"),
-        scoirty: db.get("scoiety"),
+        society: db.get("scoiety"),
         street: db.get("street"),
       );
       newList.add(deliveryAddressModel);

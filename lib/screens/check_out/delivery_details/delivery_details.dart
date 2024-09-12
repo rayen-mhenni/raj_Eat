@@ -21,6 +21,7 @@ class DeliveryDetails extends StatefulWidget {
 
 class _DeliveryDetailsState extends State<DeliveryDetails> {
   late DeliveryAddressModel value;
+  final Map<String, bool> selectedOptions = {};
   @override
   Widget build(BuildContext context) {
     CheckoutProvider deliveryAddressProvider = Provider.of(context);
@@ -58,6 +59,9 @@ class _DeliveryDetailsState extends State<DeliveryDetails> {
           MaterialPageRoute(
             builder: (context) => PaymentSummary(
               deliverAddressList: value,
+              selectedOptions: selectedOptions,
+
+
             ),
           ),
         );
@@ -97,7 +101,7 @@ class _DeliveryDetailsState extends State<DeliveryDetails> {
     });
     return SingleDeliveryItem(
       address:
-      "aera, ${e.aera}, street, ${e.street}, society ${e.scoirty}, pincode ${e.pinCode}",
+      "aera, ${e.area}, street, ${e.street}, society ${e.society}, pincode ${e.pinCode}",
       title: "${e.firstName} ${e.lastName}",
       number: e.mobileNo,
       addressType: e.addressType == "AddressTypes.Home"

@@ -3,17 +3,17 @@ class DeliveryAddressModel {
   String lastName;
   String mobileNo;
   String alternateMobileNo;
-  String scoirty;
+  String society;
   String street;
   String landMark;
   String city;
-  String aera;
+  String area;
   String pinCode;
   String addressType;
 
   DeliveryAddressModel({
     required this.addressType,
-    required this.aera,
+    required this.area,
     required this.alternateMobileNo,
     required this.city,
     required this.firstName,
@@ -22,6 +22,6 @@ class DeliveryAddressModel {
     required this.mobileNo,
     required this.pinCode,
     required this.street,
-    required this.scoirty,
+    required this.society,
   });
 }
