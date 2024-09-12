@@ -86,6 +86,7 @@ class _ProductOverviewState extends State<ProductOverview> {
         cartName: widget.productName,
         cartImage: widget.productImage,
         cartPrice: widget.productPrice,
+        selectedOptions: selectedOptionsList,
         cartQuantity: 1
     );
 

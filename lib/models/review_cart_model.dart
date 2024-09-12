@@ -4,6 +4,7 @@ class ReviewCartModel {
   final String cartName;
   final int cartPrice;
   final int cartQuantity;
+  final List<String> selectedOptions;
   var cartUnit ;
   ReviewCartModel({
     required this.cartId,
@@ -12,5 +13,6 @@ class ReviewCartModel {
     required this.cartName,
     required this.cartPrice,
     required this.cartQuantity,
+    required this.selectedOptions
   });
 }

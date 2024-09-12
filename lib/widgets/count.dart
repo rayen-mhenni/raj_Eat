@@ -132,7 +132,7 @@ class _CountState extends State<Count> {
                 cartPrice: widget.productPrice,
                 cartQuantity: count,
                 cartUnit: widget.productUnit,
-
+                selectedOptions: []
               );
             },
             child: Text(

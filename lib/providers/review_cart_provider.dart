@@ -13,6 +13,7 @@ class ReviewCartProvider with ChangeNotifier {
     required String cartImage,
     required int cartPrice,
     required int cartQuantity,
+    required List<String> selectedOptions,
     var cartUnit,
   }) async {
     User? user = FirebaseAuth.instance.currentUser;
@@ -23,15 +24,16 @@ class ReviewCartProvider with ChangeNotifier {
           .collection("YourReviewCart")
           .doc(cartId)
           .set(
-        {
-          "cartId": cartId,
-          "cartName": cartName,
-          "cartImage": cartImage,
-          "cartPrice": cartPrice,
-          "cartQuantity": cartQuantity,
-          "cartUnit":cartUnit,
-          "isAdd": true,
-        },
+          {
+            "cartId": cartId,
+            "cartName": cartName,
+            "cartImage": cartImage,
+            "cartPrice": cartPrice,
+            "cartQuantity": cartQuantity,
+            "cartUnit":cartUnit,
+            "selectedOptions" : selectedOptions,
+            "isAdd": true,
+          }
       );
     }
   }
@@ -78,6 +80,7 @@ class ReviewCartProvider with ChangeNotifier {
           cartPrice: element.get("cartPrice"),
           cartQuantity: element.get("cartQuantity"),
           cartUnit: element.get("cartUnit"),
+          selectedOptions:  element.get("selectedOptions").cast<String>(),
         );
         newList.add(reviewCartModel);
       }
