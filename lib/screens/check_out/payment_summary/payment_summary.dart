@@ -11,12 +11,10 @@ import 'package:raj_eat/screens/check_out/payment_summary/order_item.dart';
 
 class PaymentSummary extends StatefulWidget {
   final DeliveryAddressModel deliverAddressList;
-  final Map<String, bool> selectedOptions;
 
   const PaymentSummary({
     Key? key,
     required this.deliverAddressList,
-    required this.selectedOptions,
   }) : super(key: key);
 
   @override
@@ -55,7 +53,7 @@ class _PaymentSummaryState extends State<PaymentSummary> {
       required String firstName,
       required String lastName,
       required String cartName,
-      required Map<String, bool> selectedOptions,
+      required Map<String, dynamic> selectedOptions,
       required double totalAmount,
       required String userId,
     }) async {
@@ -146,11 +144,17 @@ class _PaymentSummaryState extends State<PaymentSummary> {
                     .map((e) => e.cartName)
                     .join(", ");
 
+                final Map<String, dynamic> selectedOptions = {};
+
+                for (var reviewCard in reviewCartProvider.getReviewCartDataList) {
+                  selectedOptions[reviewCard.cartName]  = reviewCard.selectedOptions;
+                }
+
                 placeOrder(
                   firstName: widget.deliverAddressList.firstName,
                   lastName: widget.deliverAddressList.lastName,
                   cartName: cartName,
-                  selectedOptions: widget.selectedOptions,
+                  selectedOptions: selectedOptions,
                   totalAmount: total,
                   userId: FirebaseAuth.instance.currentUser!.uid,
                 );
