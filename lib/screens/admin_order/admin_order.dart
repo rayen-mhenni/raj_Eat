@@ -1,60 +1,103 @@
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
-import 'package:raj_eat/models/order_model.dart';
-
 class AdminOrdersPage extends StatelessWidget {
+  const AdminOrdersPage({Key? key}) : super(key: key);
 
-  static Future<List<OrderModel>> getOrders() async {
-    List<OrderModel> orders = [];
-    QuerySnapshot eventsQuery = await FirebaseFirestore.instance.collection('ReviewCart').get();
-    for (var document in eventsQuery.docs) {
-      QuerySnapshot yourReviewCartSnap = await document.reference.collection('YourReviewCart').get();
-      for (var orderDoc in yourReviewCartSnap.docs) {
-        var orderData = orderDoc.data() as Map<String, dynamic>;
-        OrderModel order = OrderModel.fromMap(orderData, document.reference.id);
-        orders.add(order);
+  Future<List<Map<String, dynamic>>> fetchOrders() async {
+    QuerySnapshot<Map<String, dynamic>> snapshot = await FirebaseFirestore.instance.collection('order').get();
+    return snapshot.docs.map((doc) => {
+      'id': doc.id,
+      ...doc.data(),
+    }).toList();
+  }
+
+  Future<void> updateOrderStatus(String orderId, String status, String userId, String cartName) async {
+    try {
+      // Update order status
+      await FirebaseFirestore.instance.collection('order').doc(orderId).update({
+        'status': status,
+      });
+
+      // Send notification to the user when the order is refused
+      if (status == 'Refused') {
+        await FirebaseFirestore.instance.collection('Notifications').add({
+          'userId': userId,
+          'message': "L'admin a refusé la commande pour le plat '$cartName' en raison de stock. Si vous voulez, passez un autre plat ou attendez le stock dans 1 heure.",
+          'timestamp': FieldValue.serverTimestamp(),
+          'cartName': cartName, // Add cartName to the notification
+        });
       }
+    } catch (e) {
+      print('Error updating order status: $e');
     }
-          return orders;
   }
 
   @override
   Widget build(BuildContext context) {
-    print( getOrders());
     return Scaffold(
       appBar: AppBar(
-        title: Text('Admin Orders Page'),
+        title: const Text('Admin Orders'),
       ),
-      body: FutureBuilder<List<OrderModel>>(
-        future: getOrders(),
+      body: FutureBuilder<List<Map<String, dynamic>>>(
+        future: fetchOrders(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}'));
+            return const Center(child: Text('Error fetching orders'));
+          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+            return const Center(child: Text('No orders found'));
           }
 
-          List<OrderModel> orders = snapshot.data ?? [];
-
+          List<Map<String, dynamic>> orders = snapshot.data!;
           return ListView.builder(
             itemCount: orders.length,
             itemBuilder: (context, index) {
-              OrderModel order = orders[index];
-              return ListTile(
-                  title: Text('Order ID: ${order.orderId}'),
+              Map<String, dynamic> order = orders[index];
+              String cartName = order['cartName'] ?? 'Unknown Cart'; // Default value if cartName is missing
+              return Card(
+                margin: const EdgeInsets.all(10),
+                child: ListTile(
+                  title: Text('Order: $cartName'),
                   subtitle: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text('User ID: ${order.userId}'),
-                    Text('Product ID: ${order.productId}'),
-                    Text('Selected Options: ${order.selectedOptions.join(', ')}'),
-                    Text('Total Price: \$${order.totalPrice}'),
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text('First Name: ${order['firstname']}'),
+                      Text('Last Name: ${order['lastName']}'),
+                      Text('Total Amount: D${order['totalAmount']}'),
+                      Text('User ID: ${order['userId']}'),
+                      Text('Selected Options: ${order['selectedOptions'].toString()}'),
+                      Text('Status: ${order['status'] ?? 'Pending'}'),
+                      const SizedBox(height: 10),
+                      Row(
+                        children: [
+                          ElevatedButton(
+                            onPressed: () {
+                              updateOrderStatus(order['id'], 'Accepted', order['userId'], cartName);
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.green, // Changed to backgroundColor
+                            ),
+                            child: const Text('Accept'),
+                          ),
+                          const SizedBox(width: 10),
+                          ElevatedButton(
+                            onPressed: () {
+                              updateOrderStatus(order['id'], 'Refused', order['userId'], cartName);
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.red, // Changed to backgroundColor
+                            ),
+                            child: const Text('Refuse'),
+                          ),
+                        ],
+                      ),
                     ],
-                  )
+                  ),
+                ),
               );
-            }
+            },
           );
         },
       ),

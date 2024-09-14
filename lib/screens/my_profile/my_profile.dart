@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:io';
-import 'package:image_picker/image_picker.dart'; // Import pour le package image_picker
+import 'package:image_picker/image_picker.dart'; // Import for image_picker
+import 'package:firebase_storage/firebase_storage.dart'; // Import for firebase_storage
 import 'package:raj_eat/config/colors.dart';
 import 'package:raj_eat/providers/user_provider.dart';
 import 'package:raj_eat/screens/home/drawer_side.dart';
@@ -23,15 +24,25 @@ class _MyProfileState extends State<MyProfile> {
   @override
   void initState() {
     super.initState();
-    _imageUrl = widget.userProvider.currentData?.userImage; // Initialiser avec l'image actuelle
+    _imageUrl = widget.userProvider.currentData?.userImage; // Initialize with the current image
   }
 
   Future<void> _updateProfileImage() async {
     final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
 
     if (image != null) {
+      final file = File(image.path);
+      final storageRef = FirebaseStorage.instance.ref().child('profile_images/${DateTime.now().toString()}');
+      final uploadTask = storageRef.putFile(file);
+
+      final snapshot = await uploadTask.whenComplete(() => {});
+      final downloadUrl = await snapshot.ref.getDownloadURL();
+
+      // Update user profile image URL in provider and Firestore
+      await widget.userProvider.updateUserProfileImage(downloadUrl);
+
       setState(() {
-        _imageUrl = image.path; // Ici, vous pouvez ajouter la logique pour mettre à jour l'image sur le serveur
+        _imageUrl = downloadUrl; // Update the local state with the new URL
       });
     }
   }
@@ -145,8 +156,7 @@ class _MyProfileState extends State<MyProfile> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => MyOrder(),// Passez le UserProvider ici si nécessaire
-
+                            builder: (context) => MyOrder(),
                           ),
                         );
                       },
@@ -160,7 +170,7 @@ class _MyProfileState extends State<MyProfile> {
                     ),
                     listTile(
                       icon: Icons.person_outline,
-                      title: "reservation",
+                      title: "Reservation",
                       onTap: () {
                         Navigator.push(
                           context,
@@ -196,11 +206,10 @@ class _MyProfileState extends State<MyProfile> {
                 backgroundColor: primaryColor,
                 child: CircleAvatar(
                   backgroundImage: _imageUrl != null
-                      ? FileImage(File(_imageUrl!))
+                      ? NetworkImage(_imageUrl!)
                       : NetworkImage(
-                    userData?.userImage ??
-                        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRwxJM9PX5vBMVEDgnR_bqroYBU8l6EGJ7F1g&s",
-                  ) as ImageProvider,
+                    userData?.userImage ?? "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRwxJM9PX5vBMVEDgnR_bqroYBU8l6EGJ7F1g&s",
+                  ),
                   radius: 45,
                   backgroundColor: scaffoldBackgroundColor,
                 ),

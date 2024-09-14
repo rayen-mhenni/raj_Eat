@@ -29,9 +29,6 @@ enum AddressTypes {
 class _PaymentSummaryState extends State<PaymentSummary> {
   var myType = AddressTypes.Home;
 
-
-
-
   @override
   Widget build(BuildContext context) {
     ReviewCartProvider reviewCartProvider = Provider.of<ReviewCartProvider>(context);
@@ -60,26 +57,30 @@ class _PaymentSummaryState extends State<PaymentSummary> {
       User? user = FirebaseAuth.instance.currentUser;
       if (user != null) {
         try {
-          // Firestore logic for adding the order to different collections
+          // Add delivery address to Firestore
           await FirebaseFirestore.instance.collection('AddDeliverAddress').add({
             'firstname': widget.deliverAddressList.firstName,
             'lastname': widget.deliverAddressList.lastName,
             'userId': user.uid,
           });
 
+          // Add review cart data to Firestore
           DocumentReference reviewCartRef = await FirebaseFirestore.instance.collection('ReviewCart').add({
             'cartName': cartName,
             'userId': user.uid,
             'totalAmount': total,
           });
 
-          // Update the Products collection with selected options
-          await FirebaseFirestore.instance.collection('UserSelections').doc(user.uid).collection('Products').add({
-            'productId': 'your-product-id', // Replace with actual product ID
-            'selectedOptions': selectedOptions,
-          });
+          // Add selected options to UserSelections collection
+          for (var reviewCard in reviewCartProvider.getReviewCartDataList) {
+            await FirebaseFirestore.instance.collection('UserSelections').doc(user.uid).collection('Products').add({
 
-          await FirebaseFirestore.instance.collection('order').doc(user.uid).set({
+              'selectedOptions': reviewCard.selectedOptions,
+            });
+          }
+
+          // Add order details to Firestore
+          await FirebaseFirestore.instance.collection('order').add({
             "firstname": firstName,
             "lastName": lastName,
             "cartName": cartName,
@@ -87,6 +88,7 @@ class _PaymentSummaryState extends State<PaymentSummary> {
             "totalAmount": totalAmount,
             "userId": user.uid,
           });
+
 
           // Show order confirmation dialog
           showDialog(
@@ -100,6 +102,7 @@ class _PaymentSummaryState extends State<PaymentSummary> {
                     child: Text("OK"),
                     onPressed: () {
                       Navigator.of(context).pop();
+
                     },
                   ),
                 ],
@@ -122,7 +125,7 @@ class _PaymentSummaryState extends State<PaymentSummary> {
       bottomNavigationBar: ListTile(
         title: const Text("Total Amount"),
         subtitle: Text(
-          "D${total}",
+          "D${total.toStringAsFixed(2)}", // Fixed number of decimal places
           style: TextStyle(
             color: Colors.green[900],
             fontWeight: FontWeight.bold,
@@ -147,7 +150,7 @@ class _PaymentSummaryState extends State<PaymentSummary> {
                 final Map<String, dynamic> selectedOptions = {};
 
                 for (var reviewCard in reviewCartProvider.getReviewCartDataList) {
-                  selectedOptions[reviewCard.cartName]  = reviewCard.selectedOptions;
+                  selectedOptions[reviewCard.cartName] = reviewCard.selectedOptions;
                 }
 
                 placeOrder(
@@ -211,7 +214,7 @@ class _PaymentSummaryState extends State<PaymentSummary> {
                     ),
                   ),
                   trailing: Text(
-                    "D${totalPrice}",
+                    "D${totalPrice.toStringAsFixed(2)}", // Fixed number of decimal places
                     style: const TextStyle(
                       fontWeight: FontWeight.bold,
                     ),
@@ -224,7 +227,7 @@ class _PaymentSummaryState extends State<PaymentSummary> {
                     style: TextStyle(color: Colors.grey[600]),
                   ),
                   trailing: Text(
-                    "D$shippingCharge",
+                    "D${shippingCharge.toStringAsFixed(2)}", // Fixed number of decimal places
                     style: const TextStyle(
                       fontWeight: FontWeight.bold,
                     ),
@@ -237,7 +240,7 @@ class _PaymentSummaryState extends State<PaymentSummary> {
                     style: TextStyle(color: Colors.grey[600]),
                   ),
                   trailing: Text(
-                    "D$discountValue",
+                    "D${discountValue.toStringAsFixed(2)}", // Fixed number of decimal places
                     style: const TextStyle(
                       fontWeight: FontWeight.bold,
                     ),

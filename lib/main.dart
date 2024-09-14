@@ -13,15 +13,22 @@ import 'package:raj_eat/repository/firebase_auth_service.dart';
 import 'package:raj_eat/singin/login_page.dart';
 import 'package:raj_eat/singup/sing_up_page.dart';
 import 'package:raj_eat/config/colors.dart';
+import 'package:cloud_firestore/cloud_firestore.dart'; // Import Firestore
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform)
-      .then((value) => Get.put(FirebaseAuthService()))
-      .catchError((error) {
+
+  // Initialize Firebase
+  try {
+    await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+    Get.put(FirebaseAuthService());
+  } catch (error) {
     print("Error initializing Firebase: $error");
     // Handle the error here, such as showing an error dialog or logging the error
-  });
+    // You may want to terminate the app or retry the initialization
+    return;
+  }
+
   runApp(const MyApp());
 }
 
@@ -36,9 +43,10 @@ class MyApp extends StatelessWidget {
           create: (context) => ProductProvider(),
         ),
         ChangeNotifierProvider<UserProvider>(
-        create: (context) => UserProvider(),
+          create: (context) => UserProvider(),
         ),
-        ChangeNotifierProvider(create: (context) => ReviewCartProvider(),
+        ChangeNotifierProvider<ReviewCartProvider>(
+          create: (context) => ReviewCartProvider(),
         ),
         ChangeNotifierProvider<WishListProvider>(
           create: (context) => WishListProvider(),
@@ -51,12 +59,13 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           primaryColor: primaryColor,
           scaffoldBackgroundColor: scaffoldBackgroundColor,
+          // Optionally define more theme properties here
         ),
         debugShowCheckedModeBanner: false,
         title: 'Flutter Firebase',
         routes: {
           '/': (context) => const SplashScreen(
-            // Here, you can decide whether to show the LoginPage or HomePage based on user authentication
+            // Decide whether to show LoginPage or HomePage based on user authentication
             child: LoginPage(),
           ),
           '/login': (context) => const LoginPage(),

@@ -3,11 +3,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:raj_eat/models/user_model.dart';
 
-
 class UserProvider with ChangeNotifier {
   UserModel? currentData;
+
   void addUserData({
-    required  User currentUser,
+    required User currentUser,
     required String userName,
     required String userImage,
     required String userEmail,
@@ -41,6 +41,24 @@ class UserProvider with ChangeNotifier {
         role: value.get("role"),
       );
       notifyListeners();
+    }
+  }
+
+  Future<void> updateUserProfileImage(String imageUrl) async {
+    var user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      await FirebaseFirestore.instance
+          .collection("usersData")
+          .doc(user.uid)
+          .update({
+        "userImage": imageUrl,
+      });
+
+      // Update the local user data
+      if (currentData != null) {
+        currentData = currentData!.copyWith(userImage: imageUrl);
+        notifyListeners();
+      }
     }
   }
 
